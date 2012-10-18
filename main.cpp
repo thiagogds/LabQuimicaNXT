@@ -20,106 +20,14 @@ const unsigned SUBSTANCE = 1;
 const unsigned BECHER  = 2;
 const unsigned PH_INDICATOR = 3;
 
-class CubePipete{
-public:
-    const float GET_VOLUME = 0.002;
-    const float MAX_VOUME = 0.01;
-
-    float volume = 0.0;
-
-    void install(){
-        vid[PIPETE].initMode(BG0_ROM);
-        vid[PIPETE].attach(PIPETE);
-        motion[PIPETE].attach(PIPETE);
-
-        String<128> str;
-        str << "I am cube\n";
-        str << "Pipete \n\n";
-        vid[PIPETE].bg0rom.text(vec(1,2), str);
-    }
-    
-
-private:
-
-};
-
-class CubeSubstance{
-public:
-    const float GET_VOLUME = 0.002;
-    const float MAX_VOUME = 0.01;
-
-    float volume = 0.0;
-
-    void install(){
-        vid[SUBSTANCE].initMode(BG0_ROM);
-        vid[SUBSTANCE].attach(SUBSTANCE);
-        motion[SUBSTANCE].attach(SUBSTANCE);
-
-        String<128> str;
-        str << "I am cube\n";
-        str << "Substance \n\n";
-        vid[SUBSTANCE].bg0rom.text(vec(1,2), str);
-    }
-    
-
-private:
-
-};
-
-class CubeBecher{
-public:
-    const float GET_VOLUME = 0.002;
-    const float MAX_VOUME = 0.01;
-
-    float volume = 0.0;
-
-    void install(){
-        vid[BECHER].initMode(BG0_ROM);
-        vid[BECHER].attach(BECHER);
-        motion[BECHER].attach(BECHER);
-
-        String<128> str;
-        str << "I am cube\n";
-        str << "Becher \n\n";
-        vid[BECHER].bg0rom.text(vec(1,2), str);
-    }
-    
-
-private:
-
-};
-
-class CubePhIndicator{
-public:
-    const float GET_VOLUME = 0.002;
-    const float MAX_VOUME = 0.01;
-
-    float volume = 0.0;
-
-    void install(){
-        vid[PH_INDICATOR].initMode(BG0_ROM);
-        vid[PH_INDICATOR].attach(PH_INDICATOR);
-        motion[PH_INDICATOR].attach(PH_INDICATOR);
-
-        String<128> str;
-        str << "I am cube\n";
-        str << "pH Indicator \n\n";
-        vid[PH_INDICATOR].bg0rom.text(vec(1,2), str);
-    }
-    
-
-private:
-
-};
-
 class Substance{
 public:
-    String<32> name;
+    const char *name;
     float molar;
     int h;
     int oh;
 
-    Substance (String<32> name, float molar, int h, int oh){
+    Substance (const char *name, float molar, int h, int oh){
         this->name = name;
         this->molar = molar;
         this->h = h;
@@ -145,19 +53,133 @@ public:
     }
 };
 
-
 class Acid : public Substance
 {
 public:
-    Acid (String<> name, double molar, int h) : base(name, molar, h, 0){
+    Acid (const char *name, float molar, int h) : Substance(name, molar, h, 0){
     }
 };
 
 class Base : public Substance
 {
 public:
-    Base (String name, double molar, int oh) : base(name, molar, 0, oh){
+    Base (const char *name, float molar, int oh) : Substance(name, molar, 0, oh){
     }
+};
+
+class CubePipete{
+public:
+    const float GET_VOLUME = 0.002;
+    const float MAX_VOUME = 0.01;
+
+    float volume = 0.0;
+
+    void install(){
+        vid[PIPETE].initMode(BG0_ROM);
+        vid[PIPETE].attach(PIPETE);
+        motion[PIPETE].attach(PIPETE);
+
+        String<32> str;
+        str << "I am cube\n";
+        str << "Pipete \n\n";
+        vid[PIPETE].bg0rom.text(vec(1,2), str);
+    }
+
+
+private:
+
+};
+
+class CubeSubstance{
+public:
+    unsigned activeSubstance = 0;
+    Substance *substances[4];
+
+    void install(){
+        Events::cubeTouch.set(&CubeSubstance::onTouch, this);
+
+        vid[SUBSTANCE].initMode(BG0_ROM);
+        vid[SUBSTANCE].attach(SUBSTANCE);
+        motion[SUBSTANCE].attach(SUBSTANCE);
+
+        Substance hcl = Acid("HCl", 1.0f, 1);
+        Substance hbr = Acid("HBr", 1.0f, 1);
+        Substance naoh = Base("NaOH", 1.0f, 1);
+        Substance coco = Base("CoCo", 1.0f, 1);
+
+        this->substances[0] = &hcl;
+        this->substances[1] = &hbr;
+        this->substances[2] = &naoh;
+        this->substances[3] = &coco;
+
+        String<32> str;
+        str << "I am cube\n";
+        str << "Substance \n\n";
+        vid[SUBSTANCE].bg0rom.text(vec(1,2), str);
+        vid[SUBSTANCE].bg0rom.text(vec(1,6), this->substances[activeSubstance]->name);
+    }
+
+
+private:
+
+    void rotate() {
+        this->activeSubstance = (this->activeSubstance + 1) % 4;
+    }
+    void onTouch(unsigned id) {
+        CubeID cube(id);
+
+        if(cube.isTouching()){
+            vid[SUBSTANCE].bg0rom.text(vec(1,6), "                  ");
+            vid[SUBSTANCE].bg0rom.text(vec(1,6), this->substances[activeSubstance]->name);
+            this->rotate();
+        }
+    }
+};
+
+class CubeBecher{
+public:
+    const float GET_VOLUME = 0.002;
+    const float MAX_VOUME = 0.01;
+
+    float volume = 0.0;
+
+    void install(){
+        vid[BECHER].initMode(BG0_ROM);
+        vid[BECHER].attach(BECHER);
+        motion[BECHER].attach(BECHER);
+
+        String<32> str;
+        str << "I am cube\n";
+        str << "Becher \n\n";
+        vid[BECHER].bg0rom.text(vec(1,2), str);
+    }
+
+
+private:
+
+};
+
+class CubePhIndicator{
+public:
+    const float GET_VOLUME = 0.002;
+    const float MAX_VOUME = 0.01;
+
+    float volume = 0.0;
+
+    void install(){
+        vid[PH_INDICATOR].initMode(BG0_ROM);
+        vid[PH_INDICATOR].attach(PH_INDICATOR);
+        motion[PH_INDICATOR].attach(PH_INDICATOR);
+
+        String<32> str;
+        str << "I am cube\n";
+        str << "pH Indicator \n\n";
+        vid[PH_INDICATOR].bg0rom.text(vec(1,2), str);
+    }
+
+
+private:
+
 };
 
 void main()
