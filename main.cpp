@@ -116,6 +116,7 @@ public:
         str << "I am cube\n";
         str << "Substance \n\n";
         vid[SUBSTANCE].bg0rom.text(vec(1,2), str);
+        vid[SUBSTANCE].bg0rom.text(vec(1,6), this->substances[activeSubstance]->name);
     }
 
 
