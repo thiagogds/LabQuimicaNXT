@@ -128,7 +128,7 @@ private:
         CubeID cube(id);
 
         if(cube.isTouching()){
-            vid[SUBSTANCE].bg0rom.text(vec(1,6), "        ");
+            vid[SUBSTANCE].bg0rom.text(vec(1,6), "                  ");
             vid[SUBSTANCE].bg0rom.text(vec(1,6), this->substances[activeSubstance]->name);
             this->rotate();
         }
