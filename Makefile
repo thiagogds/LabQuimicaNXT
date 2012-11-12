@@ -2,8 +2,13 @@ APP = labquimica
 
 include $(SDK_DIR)/Makefile.defs
 
-OBJS = $(ASSETS).gen.o main.o
+OBJS = \
+	$(ASSETS).gen.o \
+	main.o \
+	app.o \
+	cube.o \
+
 ASSETDEPS += *.png $(ASSETS).lua
-CCFLAGS += -DCUBE_ALLOCATION=24
+CDEPS += *.h
 
 include $(SDK_DIR)/Makefile.rules
