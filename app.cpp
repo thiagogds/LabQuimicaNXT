@@ -34,10 +34,10 @@ void App::run() {
 }
 
 void App::onTouch(unsigned id) {
-    //switch(id) {
-    //    default: ; break ;
-    //    case 0: cubePipete->onTouch(id); break ;
-    //};
+    switch(id) {
+        default: ; break ;
+        case 1: cubeSubstance->onTouch(id); break ;
+    };
 }
 
 void App::onAccelChange(unsigned id) {

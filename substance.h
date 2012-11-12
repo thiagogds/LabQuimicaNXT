@@ -1,5 +1,5 @@
-#ifndef _APP_H
-#define _APP_H
+#ifndef _SUBSTANCE_H
+#define _SUBSTANCE_H
 
 class Substance {
     public:

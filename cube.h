@@ -2,6 +2,7 @@
 #define _CUBE_H
 
 #include "app.h"
+#include "substance.h"
 
 using namespace Sifteo;
 
@@ -42,8 +43,17 @@ public:
 
     VideoBuffer vid;
     TiltShakeRecognizer motion;
+	
+    unsigned activeSubstance = 0;
+    Substance *substances[4];
+
+    Substance hcl = Acid("HCl", 1.0f, 1);
+    Substance hbr = Acid("HBr", 1.0f, 1);
+    Substance naoh = Base("NaOH", 1.0f, 1);
+    Substance koh = Base("KOH", 1.0f, 1);
 
     void init();
+    void rotate();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID, 
