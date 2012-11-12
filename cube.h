@@ -7,14 +7,12 @@ using namespace Sifteo;
 
 class App;
 
-class CubeA{
+class CubePipete{
 public:
-    CubeA(CubeID cube, App* app);
+    CubePipete(CubeID cube, App* app);
 
     CubeID mCube;
     App* mApp;
-
-    String<10> name;
 
     VideoBuffer vid;
     TiltShakeRecognizer motion;
@@ -23,17 +21,24 @@ public:
     void init();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
+    void onNeighborAdd(unsigned firstID, 
+                       unsigned firstSide, 
+                       unsigned secondID, 
+                       unsigned secondSide);
+    void onNeighborRemove(unsigned firstID, 
+                          unsigned firstSide,
+                          unsigned secondID, 
+                          unsigned secondSide);
+
 
 };
 
-class CubeB{
+class CubeSubstance{
 public:
-    CubeB(CubeID cube, App* app);
+    CubeSubstance(CubeID cube, App* app);
 
     CubeID mCube;
     App* mApp;
-
-    String<10> name;
 
     VideoBuffer vid;
     TiltShakeRecognizer motion;
@@ -41,17 +46,23 @@ public:
     void init();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
+    void onNeighborAdd(unsigned firstID, 
+                       unsigned firstSide, 
+                       unsigned secondID, 
+                       unsigned secondSide);
+    void onNeighborRemove(unsigned firstID, 
+                          unsigned firstSide,
+                          unsigned secondID, 
+                          unsigned secondSide);
 
 };
 
-class CubeC{
+class CubeBecher{
 public:
-    CubeC(CubeID cube, App* app);
+    CubeBecher(CubeID cube, App* app);
 
     CubeID mCube;
     App* mApp;
-
-    String<10> name;
 
     VideoBuffer vid;
     TiltShakeRecognizer motion;
@@ -59,17 +70,23 @@ public:
     void init();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
+    void onNeighborAdd(unsigned firstID, 
+                       unsigned firstSide, 
+                       unsigned secondID, 
+                       unsigned secondSide);
+    void onNeighborRemove(unsigned firstID, 
+                          unsigned firstSide,
+                          unsigned secondID, 
+                          unsigned secondSide);
 
 };
 
-class CubeD{
+class CubePhIndicator{
 public:
-    CubeD(CubeID cube, App* app);
+    CubePhIndicator(CubeID cube, App* app);
 
     CubeID mCube;
     App* mApp;
-
-    String<10> name;
 
     TiltShakeRecognizer motion;
     VideoBuffer vid;
@@ -77,6 +94,14 @@ public:
     void init();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
+    void onNeighborAdd(unsigned firstID, 
+                       unsigned firstSide, 
+                       unsigned secondID, 
+                       unsigned secondSide);
+    void onNeighborRemove(unsigned firstID, 
+                          unsigned firstSide,
+                          unsigned secondID, 
+                          unsigned secondSide);
 
 };
 
