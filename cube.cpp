@@ -1,5 +1,6 @@
 #include "cube.h"
 #include "app.h"
+#include "substance.h"
 
 
 //########### Constructors ############
@@ -40,9 +41,10 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) {
 void CubePipete::init(){
     vid.initMode(BG0_ROM);
 
-    String<20> str;
+    String<32> str;
     str << "I am cube\n";
-    str << "Pipete\n\n";
+    str << "Pipete\n";
+    str << "Volume: " << volume;
     vid.bg0rom.text(vec(1,2), str);
 }
 
@@ -74,6 +76,12 @@ void CubePhIndicator::init(){
     vid.bg0rom.text(vec(1,2), str);
 }
 
+//######## Get/Set ##############
+
+Substance* CubeSubstance::getCurrentSubstance() {
+    return substances[activeSubstance];
+}
+
 //######## onTouch Events ############
 void CubeSubstance::rotate() {
     activeSubstance = (activeSubstance + 1) % 4;
@@ -86,5 +94,19 @@ void CubeSubstance::onTouch(unsigned id) {
         rotate();
         vid.bg0rom.text(vec(1,5), "                  ");
         vid.bg0rom.text(vec(1,5), substances[activeSubstance]->name);
+    }
+}	
+void CubePipete::onTouch(unsigned id) {
+    CubeID cube(id);
+	
+    if(cube.isTouching()){
+	volume += 0.005f;
+        vid.bg0rom.text(vec(1,4), "                  ");
+        String<30> str;
+	str << "Volume : " << FixedFP(volume, 1, 3);
+        vid.bg0rom.text(vec(1,4), str);
+        currentSubstance = mApp->cubeSubstance->getCurrentSubstance();
+        vid.bg0rom.text(vec(1,5), "                  ");
+        vid.bg0rom.text(vec(1,5), currentSubstance->name);
     }
 }

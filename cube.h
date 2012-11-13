@@ -18,6 +18,10 @@ public:
     VideoBuffer vid;
     TiltShakeRecognizer motion;
 
+    const float GET_VOLUME = 0.002f;
+    const float MAX_VOLUME = 0.01f;
+    float volume = 0.0f;
+    Substance *currentSubstance;
 
     void init();
     void onTouch(unsigned id);
@@ -54,6 +58,7 @@ public:
 
     void init();
     void rotate();
+    Substance* getCurrentSubstance();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID, 
