@@ -86,24 +86,24 @@ Substance* CubeSubstance::getCurrentSubstance() {
 void CubeSubstance::rotate() {
     activeSubstance = (activeSubstance + 1) % 4;
 }
-	
+
 void CubeSubstance::onTouch(unsigned id) {
     CubeID cube(id);
-	
+
     if(cube.isTouching()){
         rotate();
         vid.bg0rom.text(vec(1,5), "                  ");
         vid.bg0rom.text(vec(1,5), substances[activeSubstance]->name);
     }
-}	
+}
 void CubePipete::onTouch(unsigned id) {
     CubeID cube(id);
-	
+
     if(cube.isTouching()){
-	volume += 0.005f;
+    volume += 0.005f;
         vid.bg0rom.text(vec(1,4), "                  ");
         String<30> str;
-	str << "Volume : " << FixedFP(volume, 1, 3);
+    str << "Volume : " << FixedFP(volume, 1, 3);
         vid.bg0rom.text(vec(1,4), str);
         currentSubstance = mApp->cubeSubstance->getCurrentSubstance();
         vid.bg0rom.text(vec(1,5), "                  ");
