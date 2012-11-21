@@ -48,54 +48,77 @@ void App::onAccelChange(unsigned id) {
     //};
 }
 
-void App::onNeighborAdd(unsigned firstID, 
-		        unsigned firstSide, 
-		        unsigned secondID, 
-		        unsigned secondSide) {
-    //switch(firstID) {
-    //    default: ; break ;
-    //    case 0: 
-    //        cubePipete->onNeighborAdd(firstID, 
-    //    				firstSide, 
-    //    				secondID, 
-    //    				secondSide); 
-    //        break ;
-    //};
+void App::onNeighborAdd(unsigned firstID,
+                        unsigned firstSide,
+                        unsigned secondID,
+                        unsigned secondSide) {
+    switch(firstID) {
+        default: ; break ;
+        case 0:
+            cubePipete->onNeighborAdd(firstID,
+                                      firstSide,
+                                      secondID,
+                                      secondSide);
+            break ;
+        case 1:
+            cubeSubstance->onNeighborAdd(firstID,
+                                         firstSide,
+                                         secondID,
+                                         secondSide);
+            break ;
+    };
 
-    //switch(secondID) {
-    //    default: ; break ;
-    //    case 0: 
-    //        cubePipete->onNeighborAdd(secondID, 
-    //    				   secondSide, 
-    //    				   firstID, 
-    //    				   firstSide); 
-    //        break ;
-    //};
+    switch(secondID) {
+        case 0:
+            cubePipete->onNeighborAdd(secondID,
+                                      secondSide,
+                                      firstID,
+                                      firstSide);
+            break ;
+        case 1:
+            cubeSubstance->onNeighborAdd(secondID,
+                                         secondSide,
+                                         firstID,
+                                         firstSide);
+            break ;
+    };
 }
 
-void App::onNeighborRemove(unsigned firstID, 
-		        unsigned firstSide, 
-		        unsigned secondID, 
-		        unsigned secondSide) {
-    //switch(firstID) {
-    //    default: ; break ;
-    //    case 0: 
-    //        cubePipete->onNeighborRemove(firstID, 
-    //    				firstSide, 
-    //    				secondID, 
-    //    				secondSide); 
-    //        break ;
-    //};
+void App::onNeighborRemove(unsigned firstID,
+                           unsigned firstSide,
+                           unsigned secondID,
+                           unsigned secondSide) {
+    switch(firstID) {
+        default: ; break ;
+        case 0:
+            cubePipete->onNeighborRemove(firstID,
+                                         firstSide,
+                                         secondID,
+                                         secondSide);
+            break ;
+        case 1:
+            cubeSubstance->onNeighborRemove(firstID,
+                                            firstSide,
+                                            secondID,
+                                            secondSide);
+            break ;
+    };
 
-    //switch(secondID) {
-    //    default: ; break ;
-    //    case 0: 
-    //        cubePipete->onNeighborRemove(secondID, 
-    //    				   secondSide, 
-    //    				   firstID, 
-    //    				   firstSide); 
-    //        break ;
-    //};
+    switch(secondID) {
+        case 0:
+            cubePipete->onNeighborRemove(secondID,
+                                         secondSide,
+                                         firstID,
+                                         firstSide);
+            break ;
+        case 1:
+            cubeSubstance->onNeighborRemove(secondID,
+                                            secondSide,
+                                            firstID,
+                                            firstSide);
+            break ;
+    };
 }
+
 
 

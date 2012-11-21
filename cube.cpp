@@ -76,10 +76,22 @@ void CubePhIndicator::init(){
     vid.bg0rom.text(vec(1,2), str);
 }
 
-//######## Get/Set ##############
+//######## Get/Set/Others ##############
 
 Substance* CubeSubstance::getCurrentSubstance() {
     return substances[activeSubstance];
+}
+
+bool CubePipete::isSameSubstance(Substance* substance){
+    if(currentSubstance){
+        if(currentSubstance == substance){
+            return 1;
+        }
+        return 0;
+    }
+    else {
+        return 1;
+    };
 }
 
 //######## onTouch Events ############
@@ -98,15 +110,56 @@ void CubeSubstance::onTouch(unsigned id) {
 }
 void CubePipete::onTouch(unsigned id) {
     CubeID cube(id);
+    Substance* connectedSubstance = mApp->cubeSubstance->getCurrentSubstance();
 
     if(cube.isTouching()){
-    volume += 0.005f;
-        vid.bg0rom.text(vec(1,4), "                  ");
-        String<30> str;
-    str << "Volume : " << FixedFP(volume, 1, 3);
-        vid.bg0rom.text(vec(1,4), str);
-        currentSubstance = mApp->cubeSubstance->getCurrentSubstance();
-        vid.bg0rom.text(vec(1,5), "                  ");
-        vid.bg0rom.text(vec(1,5), currentSubstance->name);
+        if(connectedToSubstance && isSameSubstance(connectedSubstance)){
+            volume += 0.005f;
+
+            vid.bg0rom.text(vec(1,4), "                  ");
+
+            String<30> str;
+            str << "Volume : " << FixedFP(volume, 1, 3);
+            vid.bg0rom.text(vec(1,4), str);
+
+            currentSubstance = connectedSubstance;
+            vid.bg0rom.text(vec(1,5), "                  ");
+            vid.bg0rom.text(vec(1,5), currentSubstance->name);
+        }
     }
+}
+
+//######## onNeighborAdd Events ############
+
+void CubePipete::onNeighborAdd(unsigned pipeteID,
+                               unsigned pipeteSide,
+                               unsigned neighborID,
+                               unsigned neighborSide){
+    if(neighborID == 1 && neighborSide == TOP && pipeteSide == BOTTOM){
+        connectedToSubstance = true;
+    }
+}
+
+void CubeSubstance::onNeighborAdd(unsigned pipeteID,
+                                  unsigned pipeteSide,
+                                  unsigned neighborID,
+                                  unsigned neighborSide){
+}
+
+//######## onNeighborRemove Events ############
+
+void CubePipete::onNeighborRemove(unsigned pipeteID,
+                               unsigned pipeteSide,
+                               unsigned neighborID,
+                               unsigned neighborSide){
+    if(connectedToSubstance){
+        connectedToSubstance = false;
+    }
+
+}
+
+void CubeSubstance::onNeighborRemove(unsigned pipeteID,
+                                  unsigned pipeteSide,
+                                  unsigned neighborID,
+                                  unsigned neighborSide){
 }

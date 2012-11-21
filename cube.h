@@ -22,17 +22,19 @@ public:
     const float MAX_VOLUME = 0.01f;
     float volume = 0.0f;
     Substance *currentSubstance;
+    bool connectedToSubstance;
 
     void init();
+    bool isSameSubstance(Substance* substance);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
-    void onNeighborAdd(unsigned firstID, 
-                       unsigned firstSide, 
-                       unsigned secondID, 
+    void onNeighborAdd(unsigned firstID,
+                       unsigned firstSide,
+                       unsigned secondID,
                        unsigned secondSide);
-    void onNeighborRemove(unsigned firstID, 
+    void onNeighborRemove(unsigned firstID,
                           unsigned firstSide,
-                          unsigned secondID, 
+                          unsigned secondID,
                           unsigned secondSide);
 
 
@@ -47,7 +49,7 @@ public:
 
     VideoBuffer vid;
     TiltShakeRecognizer motion;
-	
+
     unsigned activeSubstance = 0;
     Substance *substances[4];
 
@@ -61,13 +63,13 @@ public:
     Substance* getCurrentSubstance();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
-    void onNeighborAdd(unsigned firstID, 
-                       unsigned firstSide, 
-                       unsigned secondID, 
+    void onNeighborAdd(unsigned firstID,
+                       unsigned firstSide,
+                       unsigned secondID,
                        unsigned secondSide);
-    void onNeighborRemove(unsigned firstID, 
+    void onNeighborRemove(unsigned firstID,
                           unsigned firstSide,
-                          unsigned secondID, 
+                          unsigned secondID,
                           unsigned secondSide);
 
 };
@@ -85,13 +87,13 @@ public:
     void init();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
-    void onNeighborAdd(unsigned firstID, 
-                       unsigned firstSide, 
-                       unsigned secondID, 
+    void onNeighborAdd(unsigned firstID,
+                       unsigned firstSide,
+                       unsigned secondID,
                        unsigned secondSide);
-    void onNeighborRemove(unsigned firstID, 
+    void onNeighborRemove(unsigned firstID,
                           unsigned firstSide,
-                          unsigned secondID, 
+                          unsigned secondID,
                           unsigned secondSide);
 
 };
@@ -109,13 +111,13 @@ public:
     void init();
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
-    void onNeighborAdd(unsigned firstID, 
-                       unsigned firstSide, 
-                       unsigned secondID, 
+    void onNeighborAdd(unsigned firstID,
+                       unsigned firstSide,
+                       unsigned secondID,
                        unsigned secondSide);
-    void onNeighborRemove(unsigned firstID, 
+    void onNeighborRemove(unsigned firstID,
                           unsigned firstSide,
-                          unsigned secondID, 
+                          unsigned secondID,
                           unsigned secondSide);
 
 };
