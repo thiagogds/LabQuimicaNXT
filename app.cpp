@@ -60,12 +60,6 @@ void App::onNeighborAdd(unsigned firstID,
                                       secondID,
                                       secondSide);
             break ;
-        case 1:
-            cubeSubstance->onNeighborAdd(firstID,
-                                         firstSide,
-                                         secondID,
-                                         secondSide);
-            break ;
     };
 
     switch(secondID) {
@@ -74,12 +68,6 @@ void App::onNeighborAdd(unsigned firstID,
                                       secondSide,
                                       firstID,
                                       firstSide);
-            break ;
-        case 1:
-            cubeSubstance->onNeighborAdd(secondID,
-                                         secondSide,
-                                         firstID,
-                                         firstSide);
             break ;
     };
 }
@@ -96,12 +84,6 @@ void App::onNeighborRemove(unsigned firstID,
                                          secondID,
                                          secondSide);
             break ;
-        case 1:
-            cubeSubstance->onNeighborRemove(firstID,
-                                            firstSide,
-                                            secondID,
-                                            secondSide);
-            break ;
     };
 
     switch(secondID) {
@@ -110,12 +92,6 @@ void App::onNeighborRemove(unsigned firstID,
                                          secondSide,
                                          firstID,
                                          firstSide);
-            break ;
-        case 1:
-            cubeSubstance->onNeighborRemove(secondID,
-                                            secondSide,
-                                            firstID,
-                                            firstSide);
             break ;
     };
 }

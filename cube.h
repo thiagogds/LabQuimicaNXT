@@ -20,9 +20,11 @@ public:
 
     const float GET_VOLUME = 0.002f;
     const float MAX_VOLUME = 0.01f;
+    const float SET_VOLUME = 0.0005f;
     float volume = 0.0f;
     Substance *currentSubstance;
     bool connectedToSubstance;
+    bool connectedToBecher;
 
     void init();
     bool isSameSubstance(Substance* substance);
@@ -74,6 +76,11 @@ public:
 
 };
 
+struct SubstanceVolumeWrapper {
+    Substance *substance;
+    float volume;
+};
+
 class CubeBecher{
 public:
     CubeBecher(CubeID cube, App* app);
@@ -84,7 +91,15 @@ public:
     VideoBuffer vid;
     TiltShakeRecognizer motion;
 
+    SubstanceVolumeWrapper substances[4];
+
+    Substance hcl = Acid("HCl", 1.0f, 1);
+    Substance hbr = Acid("HBr", 1.0f, 1);
+    Substance naoh = Base("NaOH", 1.0f, 1);
+    Substance koh = Base("KOH", 1.0f, 1);
+
     void init();
+    void addSubstance(Substance* substance, float volume);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,

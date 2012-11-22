@@ -2,7 +2,6 @@
 #include "app.h"
 #include "substance.h"
 
-
 //########### Constructors ############
 CubePipete::CubePipete(CubeID cube, App* app) {
     mCube = cube;
@@ -28,6 +27,16 @@ CubeBecher::CubeBecher(CubeID cube, App* app) {
     mApp = app;
     vid.attach(cube);
     motion.attach(cube);
+
+    SubstanceVolumeWrapper hclWrapper = {&hcl,0};
+    SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
+    SubstanceVolumeWrapper naohWrapper = {&naoh, 0};
+    SubstanceVolumeWrapper kohWrapper = {&koh, 0};
+
+    substances[0] = hclWrapper;
+    substances[1] = hbrWrapper;
+    substances[2] = naohWrapper;
+    substances[3] = kohWrapper;
 }
 
 CubePhIndicator::CubePhIndicator(CubeID cube, App* app) {
@@ -94,6 +103,20 @@ bool CubePipete::isSameSubstance(Substance* substance){
     };
 }
 
+void CubeBecher::addSubstance(Substance* substance, float volume) {
+    for(unsigned i = 0 ; i < 4 ; i++) {
+        LOG("Subs: %s\n", substance->name.c_str());
+        LOG("Becher: %s\n", substances[i].substance->name.c_str());
+        if(substances[i].substance->name == substance->name) {
+            substances[i].volume += volume;
+
+            LOG("Achei umas substancia\n");
+
+            return;
+        }
+    }
+}
+
 //######## onTouch Events ############
 void CubeSubstance::rotate() {
     activeSubstance = (activeSubstance + 1) % 4;
@@ -111,10 +134,11 @@ void CubeSubstance::onTouch(unsigned id) {
 void CubePipete::onTouch(unsigned id) {
     CubeID cube(id);
     Substance* connectedSubstance = mApp->cubeSubstance->getCurrentSubstance();
+    float currentVolume;
 
     if(cube.isTouching()){
         if(connectedToSubstance && isSameSubstance(connectedSubstance)){
-            volume += 0.005f;
+            volume += GET_VOLUME;
 
             vid.bg0rom.text(vec(1,4), "                  ");
 
@@ -125,6 +149,16 @@ void CubePipete::onTouch(unsigned id) {
             currentSubstance = connectedSubstance;
             vid.bg0rom.text(vec(1,5), "                  ");
             vid.bg0rom.text(vec(1,5), currentSubstance->name);
+        } else if (connectedToBecher) {
+            currentVolume = volume - SET_VOLUME;
+            if(currentVolume >= 0) {
+                volume -= SET_VOLUME;
+                mApp->cubeBecher->addSubstance(currentSubstance, SET_VOLUME);
+
+                String<30> str;
+                str << "Volume : " << FixedFP(volume, 1, 3);
+                vid.bg0rom.text(vec(1,4), str);
+            }
         }
     }
 }
@@ -138,12 +172,9 @@ void CubePipete::onNeighborAdd(unsigned pipeteID,
     if(neighborID == 1 && neighborSide == TOP && pipeteSide == BOTTOM){
         connectedToSubstance = true;
     }
-}
-
-void CubeSubstance::onNeighborAdd(unsigned pipeteID,
-                                  unsigned pipeteSide,
-                                  unsigned neighborID,
-                                  unsigned neighborSide){
+    if(neighborID == 2 && neighborSide == TOP && pipeteSide == BOTTOM){
+        connectedToBecher = true;
+    }
 }
 
 //######## onNeighborRemove Events ############
@@ -156,10 +187,8 @@ void CubePipete::onNeighborRemove(unsigned pipeteID,
         connectedToSubstance = false;
     }
 
-}
+    if(connectedToBecher){
+        connectedToBecher = false;
+    }
 
-void CubeSubstance::onNeighborRemove(unsigned pipeteID,
-                                  unsigned pipeteSide,
-                                  unsigned neighborID,
-                                  unsigned neighborSide){
 }
