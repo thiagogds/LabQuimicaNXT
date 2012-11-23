@@ -103,16 +103,20 @@ bool CubePipete::isSameSubstance(Substance* substance){
     };
 }
 
+void CubeBecher::printSubstance(unsigned index) {
+    int line = 4 + index;
+    vid.bg0rom.text(vec(1, line), "                 ");
+    String<20> substanceNameVolume;
+    substanceNameVolume << substances[index].substance->name << " : " <<  FixedFP(substances[index].volume, 1, 5);
+    vid.bg0rom.text(vec(1, line), substanceNameVolume);
+}
+
 void CubeBecher::addSubstance(Substance* substance, float volume) {
     for(unsigned i = 0 ; i < 4 ; i++) {
-        LOG("Subs: %s\n", substance->name.c_str());
-        LOG("Becher: %s\n", substances[i].substance->name.c_str());
         if(substances[i].substance->name == substance->name) {
             substances[i].volume += volume;
-
-            LOG("Achei umas substancia\n");
-
-            return;
+            printSubstance(i);
+            break;
         }
     }
 }
@@ -143,7 +147,7 @@ void CubePipete::onTouch(unsigned id) {
             vid.bg0rom.text(vec(1,4), "                  ");
 
             String<30> str;
-            str << "Volume : " << FixedFP(volume, 1, 3);
+            str << "Volume : " << FixedFP(volume, 1, 5);
             vid.bg0rom.text(vec(1,4), str);
 
             currentSubstance = connectedSubstance;
@@ -156,7 +160,7 @@ void CubePipete::onTouch(unsigned id) {
                 mApp->cubeBecher->addSubstance(currentSubstance, SET_VOLUME);
 
                 String<30> str;
-                str << "Volume : " << FixedFP(volume, 1, 3);
+                str << "Volume : " << FixedFP(volume, 1, 5);
                 vid.bg0rom.text(vec(1,4), str);
             }
         }

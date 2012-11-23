@@ -100,6 +100,7 @@ public:
 
     void init();
     void addSubstance(Substance* substance, float volume);
+    void printSubstance(unsigned index);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
