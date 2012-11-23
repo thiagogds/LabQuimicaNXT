@@ -141,7 +141,7 @@ void CubePipete::onTouch(unsigned id) {
     float currentVolume;
 
     if(cube.isTouching()){
-        if(connectedToSubstance && isSameSubstance(connectedSubstance)){
+        if(connectedToSubstance && (!currentSubstance || isSameSubstance(connectedSubstance))){
             volume += GET_VOLUME;
 
             vid.bg0rom.text(vec(1,4), "                  ");
