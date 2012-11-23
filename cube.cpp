@@ -142,18 +142,20 @@ void CubePipete::onTouch(unsigned id) {
 
     if(cube.isTouching()){
         if(connectedToSubstance && isSameSubstance(connectedSubstance)){
-            //TODO: Max Volume
-            volume += GET_VOLUME;
+            currentVolume = volume + GET_VOLUME;
+            if(currentVolume <= MAX_VOLUME) {
+                volume += GET_VOLUME;
 
-            vid.bg0rom.text(vec(1,4), "                  ");
+                vid.bg0rom.text(vec(1,4), "                  ");
 
-            String<30> str;
-            str << "Volume: " << FixedFP(volume, 1, 5);
-            vid.bg0rom.text(vec(1,4), str);
+                String<30> str;
+                str << "Volume: " << FixedFP(volume, 1, 5);
+                vid.bg0rom.text(vec(1,4), str);
 
-            currentSubstance = connectedSubstance;
-            vid.bg0rom.text(vec(1,5), "                  ");
-            vid.bg0rom.text(vec(1,5), currentSubstance->name);
+                currentSubstance = connectedSubstance;
+                vid.bg0rom.text(vec(1,5), "                  ");
+                vid.bg0rom.text(vec(1,5), currentSubstance->name);
+            }
         } else if (connectedToBecher && currentSubstance) {
             volume -= SET_VOLUME;
 
