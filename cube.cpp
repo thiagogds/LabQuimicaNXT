@@ -107,7 +107,7 @@ void CubeBecher::printSubstance(unsigned index) {
     int line = 4 + index;
     vid.bg0rom.text(vec(1, line), "                 ");
     String<20> substanceNameVolume;
-    substanceNameVolume << substances[index].substance->name << " : " <<  FixedFP(substances[index].volume, 1, 5);
+    substanceNameVolume << substances[index].substance->name << ": " <<  FixedFP(substances[index].volume, 1, 5);
     vid.bg0rom.text(vec(1, line), substanceNameVolume);
 }
 
@@ -141,28 +141,33 @@ void CubePipete::onTouch(unsigned id) {
     float currentVolume;
 
     if(cube.isTouching()){
-        if(connectedToSubstance && (!currentSubstance || isSameSubstance(connectedSubstance))){
+        if(connectedToSubstance && isSameSubstance(connectedSubstance)){
+            //TODO: Max Volume
             volume += GET_VOLUME;
 
             vid.bg0rom.text(vec(1,4), "                  ");
 
             String<30> str;
-            str << "Volume : " << FixedFP(volume, 1, 5);
+            str << "Volume: " << FixedFP(volume, 1, 5);
             vid.bg0rom.text(vec(1,4), str);
 
             currentSubstance = connectedSubstance;
             vid.bg0rom.text(vec(1,5), "                  ");
             vid.bg0rom.text(vec(1,5), currentSubstance->name);
-        } else if (connectedToBecher) {
-            currentVolume = volume - SET_VOLUME;
-            if(currentVolume >= 0) {
-                volume -= SET_VOLUME;
-                mApp->cubeBecher->addSubstance(currentSubstance, SET_VOLUME);
+        } else if (connectedToBecher && currentSubstance) {
+            volume -= SET_VOLUME;
 
-                String<30> str;
-                str << "Volume : " << FixedFP(volume, 1, 5);
-                vid.bg0rom.text(vec(1,4), str);
+            mApp->cubeBecher->addSubstance(currentSubstance, SET_VOLUME);
+
+            if(volume < 0){
+                volume = 0.0f;
+                currentSubstance = 0;
+                vid.bg0rom.text(vec(1,5), "                  ");
             }
+
+            String<30> str;
+            str << "Volume: " << FixedFP(volume, 1, 5);
+            vid.bg0rom.text(vec(1,4), str);
         }
     }
 }

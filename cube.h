@@ -18,8 +18,8 @@ public:
     VideoBuffer vid;
     TiltShakeRecognizer motion;
 
-    const float GET_VOLUME = 0.002f;
-    const float MAX_VOLUME = 0.01f;
+    const float GET_VOLUME = 0.0050f;
+    const float MAX_VOLUME = 0.0100f;
     const float SET_VOLUME = 0.0005f;
     float volume = 0.0f;
     Substance *currentSubstance;
