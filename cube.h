@@ -16,7 +16,6 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
 
     const float GET_VOLUME = 0.0050f;
     const float MAX_VOLUME = 0.0100f;
@@ -50,7 +49,6 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
 
     unsigned activeSubstance = 0;
     Substance *substances[4];
@@ -89,7 +87,6 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
 
     SubstanceVolumeWrapper substances[4];
 
@@ -121,7 +118,6 @@ public:
     CubeID mCube;
     App* mApp;
 
-    TiltShakeRecognizer motion;
     VideoBuffer vid;
 
     void init();

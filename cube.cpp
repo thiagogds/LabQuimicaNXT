@@ -7,14 +7,12 @@ CubePipete::CubePipete(CubeID cube, App* app) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
-    motion.attach(cube);
 }
 
 CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
-    motion.attach(cube);
 
     substances[0] = &hcl;
     substances[1] = &hbr;
@@ -26,7 +24,6 @@ CubeBecher::CubeBecher(CubeID cube, App* app) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
-    motion.attach(cube);
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
@@ -43,7 +40,6 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
-    motion.attach(cube);
 }
 
 //########### Inits #################
