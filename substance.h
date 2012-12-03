@@ -1,15 +1,17 @@
 #ifndef _SUBSTANCE_H
 #define _SUBSTANCE_H
 
+using namespace Sifteo;
+
 class Substance {
     public:
-        const char *name;
+        String<8> name;
         float molar;
         int h;
         int oh;
 
         Substance (const char *name, float molar, int h, int oh){
-            this->name = name;
+            this->name << name;
             this->molar = molar;
             this->h = h;
             this->oh = oh;
