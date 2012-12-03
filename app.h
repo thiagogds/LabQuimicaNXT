@@ -3,6 +3,7 @@
 
 #include <sifteo.h>
 #include "cube.h"
+#include "assets.gen.h"
 
 using namespace Sifteo;
 

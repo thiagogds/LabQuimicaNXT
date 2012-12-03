@@ -44,13 +44,8 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) {
 
 //########### Inits #################
 void CubePipete::init(){
-    vid.initMode(BG0_ROM);
-
-    String<32> str;
-    str << "I am cube\n";
-    str << "Pipete\n";
-    str << "Volume: " << volume;
-    vid.bg0rom.text(vec(1,2), str);
+    vid.initMode(BG0);
+    vid.bg0.image(vec(0,0), Pipete);
 }
 
 void CubeSubstance::init(){
