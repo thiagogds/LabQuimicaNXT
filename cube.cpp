@@ -59,12 +59,12 @@ void CubeSubstance::init(){
 }
 
 void CubeBecher::init(){
-    vid.initMode(BG0_ROM);
+    vid.initMode(BG0_SPR_BG1);
+    vid.bg0.image(vec(0,0), Background);
 
-    String<20> str;
-    str << "I am cube\n";
-    str << "Becher\n\n";
-    vid.bg0rom.text(vec(1,2), str);
+    const auto &sprite = vid.sprites[0];
+    sprite.setImage(Flask, 0);
+    sprite.move(0,0);
 }
 
 void CubePhIndicator::init(){
