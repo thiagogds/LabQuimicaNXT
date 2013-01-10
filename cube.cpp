@@ -20,10 +20,14 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[3] = &koh;
 }
 
-CubeBecher::CubeBecher(CubeID cube, App* app) {
+CubeBecher::CubeBecher(CubeID cube, App* app) : ticker(10) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
+
+    frame = 0;
+    yAxis = 128;
+    move = false;
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
@@ -62,9 +66,29 @@ void CubeBecher::init(){
     vid.initMode(BG0_SPR_BG1);
     vid.bg0.image(vec(0,0), Background);
 
-    const auto &sprite = vid.sprites[0];
-    sprite.setImage(Flask, 0);
-    sprite.move(0,0);
+    const auto &becher = vid.sprites[0];
+    const auto &liquid = vid.sprites[1];
+    becher.setImage(Flask, 0);
+    becher.move(0,0);
+
+    liquid.setImage(Liquid, 0);
+    liquid.move(0,128);
+}
+
+void CubeBecher::animate(float dt){
+    if(move){
+        const auto &liquid = vid.sprites[1];
+        if(frame < Liquid.numFrames()){
+            liquid.setImage(Liquid, frame);
+            frame++;
+            yAxis = yAxis - 5;
+            liquid.move(0, yAxis);
+        } else {
+            frame = 0;
+            liquid.setImage(Liquid, frame);
+            move = false;
+        }
+    }
 }
 
 void CubePhIndicator::init(){
@@ -106,7 +130,7 @@ void CubeBecher::addSubstance(Substance* substance, float volume) {
     for(unsigned i = 0 ; i < 4 ; i++) {
         if(substances[i].substance->name == substance->name) {
             substances[i].volume += volume;
-            printSubstance(i);
+            move = true;
             break;
         }
     }

@@ -23,16 +23,17 @@ public:
 
     NOINLINE void init();
     NOINLINE void run();
+    void animate(float dt);
 
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
-    void onNeighborAdd(unsigned firstID, 
-                       unsigned firstSide, 
-                       unsigned secondID, 
+    void onNeighborAdd(unsigned firstID,
+                       unsigned firstSide,
+                       unsigned secondID,
                        unsigned secondSide);
-    void onNeighborRemove(unsigned firstID, 
+    void onNeighborRemove(unsigned firstID,
                           unsigned firstSide,
-                          unsigned secondID, 
+                          unsigned secondID,
                           unsigned secondSide);
 };
 

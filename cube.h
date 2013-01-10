@@ -88,6 +88,12 @@ public:
 
     VideoBuffer vid;
 
+    TimeTicker ticker;
+
+    unsigned frame;
+    unsigned yAxis;
+    bool move;
+
     SubstanceVolumeWrapper substances[4];
 
     Substance hcl = Acid("HCl", 1.0f, 1);
@@ -96,6 +102,7 @@ public:
     Substance koh = Base("KOH", 1.0f, 1);
 
     void init();
+    void animate(float dt);
     void addSubstance(Substance* substance, float volume);
     void printSubstance(unsigned index);
     void onTouch(unsigned id);

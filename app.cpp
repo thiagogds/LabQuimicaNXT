@@ -27,10 +27,19 @@ void App::init() {
     Events::neighborRemove.set(&App::onNeighborRemove, this);
 }
 
+void App::animate(float dt){
+    for(int t = cubeBecher->ticker.tick(dt); t ; t--){
+        cubeBecher->animate(dt);
+    }
+}
+
 void App::run() {
     TimeStep ts;
-    ts.next();
-    System::paint();
+    while(true) {
+        ts.next();
+        animate(ts.delta());
+        System::paint();
+    }
 }
 
 void App::onTouch(unsigned id) {
