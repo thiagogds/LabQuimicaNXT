@@ -20,13 +20,13 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[3] = &koh;
 }
 
-CubeBecher::CubeBecher(CubeID cube, App* app) : ticker(10) {
+CubeBecher::CubeBecher(CubeID cube, App* app) : ticker(5) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
 
     frame = 0;
-    yAxis = 128;
+    yAxis = 68;
     move = false;
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
@@ -68,11 +68,15 @@ void CubeBecher::init(){
 
     const auto &becher = vid.sprites[0];
     const auto &liquid = vid.sprites[1];
-    becher.setImage(Flask, 0);
+    const auto &white = vid.sprites[2];
+    becher.setImage(FlaskBkg, 0);
     becher.move(0,0);
 
     liquid.setImage(Liquid, 0);
-    liquid.move(0,128);
+    liquid.move(0,68);
+
+    white.setImage(WhiteBkg, 0);
+    white.move(0,0);
 }
 
 void CubeBecher::animate(float dt){
@@ -81,7 +85,9 @@ void CubeBecher::animate(float dt){
         if(frame < Liquid.numFrames()){
             liquid.setImage(Liquid, frame);
             frame++;
-            yAxis = yAxis - 5;
+	    if(yAxis > 0){
+            	yAxis = yAxis - 1;
+	    }
             liquid.move(0, yAxis);
         } else {
             frame = 0;
@@ -161,15 +167,15 @@ void CubePipete::onTouch(unsigned id) {
             if(currentVolume <= MAX_VOLUME) {
                 volume += GET_VOLUME;
 
-                vid.bg0rom.text(vec(1,4), "                  ");
+                //vid.bg0rom.text(vec(1,4), "                  ");
 
                 String<30> str;
                 str << "Volume: " << FixedFP(volume, 1, 5);
-                vid.bg0rom.text(vec(1,4), str);
+                //vid.bg0rom.text(vec(1,4), str);
 
                 currentSubstance = connectedSubstance;
-                vid.bg0rom.text(vec(1,5), "                  ");
-                vid.bg0rom.text(vec(1,5), currentSubstance->name);
+                //vid.bg0rom.text(vec(1,5), "                  ");
+                //vid.bg0rom.text(vec(1,5), currentSubstance->name);
             }
         } else if (connectedToBecher && currentSubstance) {
             volume -= SET_VOLUME;
@@ -179,12 +185,12 @@ void CubePipete::onTouch(unsigned id) {
             if(volume < 0){
                 volume = 0.0f;
                 currentSubstance = 0;
-                vid.bg0rom.text(vec(1,5), "                  ");
+                //vid.bg0rom.text(vec(1,5), "                  ");
             }
 
             String<30> str;
             str << "Volume: " << FixedFP(volume, 1, 5);
-            vid.bg0rom.text(vec(1,4), str);
+            //vid.bg0rom.text(vec(1,4), str);
         }
     }
 }

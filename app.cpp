@@ -36,9 +36,9 @@ void App::animate(float dt){
 void App::run() {
     TimeStep ts;
     while(true) {
-        ts.next();
         animate(ts.delta());
         System::paint();
+        ts.next();
     }
 }
 
