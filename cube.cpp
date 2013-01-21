@@ -26,7 +26,6 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : ticker(5) {
     vid.attach(cube);
 
     frame = 0;
-    yAxis = 68;
     move = false;
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
@@ -64,35 +63,51 @@ void CubeSubstance::init(){
 
 void CubeBecher::init(){
     vid.initMode(BG0_SPR_BG1);
-    vid.bg0.image(vec(0,0), Background);
+    vid.bg0.image(vec(0,0), WhiteBkg);
 
     const auto &becher = vid.sprites[0];
     const auto &liquid = vid.sprites[1];
-    const auto &white = vid.sprites[2];
+    const auto &drop = vid.sprites[2];
+
     becher.setImage(FlaskBkg, 0);
     becher.move(0,0);
 
     liquid.setImage(Liquid, 0);
     liquid.move(0,68);
 
-    white.setImage(WhiteBkg, 0);
-    white.move(0,0);
+    drop.setImage(Drop, 0);
+    //Não entendemos por que o eixo Y é -6 e não -32.
+    drop.move(64 - (drop.width()/2),-6);
 }
 
 void CubeBecher::animate(float dt){
     if(move){
         const auto &liquid = vid.sprites[1];
-        if(frame < Liquid.numFrames()){
-            liquid.setImage(Liquid, frame);
-            frame++;
-	    if(yAxis > 0){
-            	yAxis = yAxis - 1;
-	    }
-            liquid.move(0, yAxis);
+        const auto &drop = vid.sprites[2];
+		
+		bool dropped = false;
+
+		if (drop.y() < 160 - liquid.y()) {
+			drop.move(drop.x(), drop.y() + 10);
+		}
+		else {
+			dropped = true;
+		}      
+
+		if(frame < Liquid.numFrames()){
+			if (dropped) {
+            	liquid.setImage(Liquid, frame);
+            	frame++;
+
+				if(liquid.y() > 0){
+					liquid.move(liquid.x(), liquid.y() - 1);
+				}
+			}
         } else {
             frame = 0;
             liquid.setImage(Liquid, frame);
-            move = false;
+			drop.move(drop.x(), -6);
+		    move = false;
         }
     }
 }

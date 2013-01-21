@@ -91,7 +91,6 @@ public:
     TimeTicker ticker;
 
     unsigned frame;
-    unsigned yAxis;
     bool move;
 
     SubstanceVolumeWrapper substances[4];
