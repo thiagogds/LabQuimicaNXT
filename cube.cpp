@@ -84,30 +84,30 @@ void CubeBecher::animate(float dt){
     if(move){
         const auto &liquid = vid.sprites[1];
         const auto &drop = vid.sprites[2];
-		
-		bool dropped = false;
 
-		if (drop.y() < 160 - liquid.y()) {
-			drop.move(drop.x(), drop.y() + 10);
-		}
-		else {
-			dropped = true;
-		}      
+        bool dropped = false;
 
-		if(frame < Liquid.numFrames()){
-			if (dropped) {
-            	liquid.setImage(Liquid, frame);
-            	frame++;
+        if (drop.y() < 160 - liquid.y()) {
+            drop.move(drop.x(), drop.y() + 10);
+        }
+        else {
+            dropped = true;
+        }
 
-				if(liquid.y() > 0){
-					liquid.move(liquid.x(), liquid.y() - 1);
-				}
-			}
+        if(frame < Liquid.numFrames()){
+            if (dropped) {
+                liquid.setImage(Liquid, frame);
+                frame++;
+
+                if(liquid.y() > 0){
+                    liquid.move(liquid.x(), liquid.y() - 1);
+                }
+            }
         } else {
             frame = 0;
             liquid.setImage(Liquid, frame);
-			drop.move(drop.x(), -6);
-		    move = false;
+            drop.move(drop.x(), -6);
+            move = false;
         }
     }
 }
