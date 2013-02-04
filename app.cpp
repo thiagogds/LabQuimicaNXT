@@ -11,15 +11,15 @@ App::App() {
     CubeBecher cBecher = CubeBecher(2,this);
     this->cubeBecher = &cBecher;
 
-    CubePhIndicator cPhIndicator = CubePhIndicator(3,this);
-    this->cubePhIndicator = &cPhIndicator;
+    //CubePhIndicator cPhIndicator = CubePhIndicator(3,this);
+    //this->cubePhIndicator = &cPhIndicator;
 }
 
 void App::init() {
     cubePipete->init();
     cubeSubstance->init();
     cubeBecher->init();
-    cubePhIndicator->init();
+    //cubePhIndicator->init();
 
     Events::cubeTouch.set(&App::onTouch, this);
     Events::cubeAccelChange.set(&App::onAccelChange, this);

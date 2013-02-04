@@ -10,7 +10,7 @@ static Metadata M = Metadata()
     .title("Sifteo Chemistry Lab")
     .package("moleque.lab.quimica", "0.1")
     .icon(Icon)
-    .cubeRange(4);
+    .cubeRange(3);
 
 void main()
 {
