@@ -4,7 +4,7 @@
 using namespace Sifteo;
 
 static AssetSlot MainSlot = AssetSlot::allocate()
-    .bootstrap(GameAssets);
+    .bootstrap(GameAssets).bootstrap(SpriteAssets);
 
 static Metadata M = Metadata()
     .title("Sifteo Chemistry Lab")
@@ -16,7 +16,7 @@ void main()
 {
     App app;
     app.init();
-    
+
     while (1) {
 	    app.run();
 	}
