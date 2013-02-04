@@ -20,13 +20,15 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[3] = &koh;
 }
 
-CubeBecher::CubeBecher(CubeID cube, App* app) : ticker(5) {
+CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(10), liquidTicker(7) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
 
-    frame = 0;
     move = false;
+
+    LiquidAnimation liquidAnim = {0,0,false};
+    DropAnimation dropAnim = {false};
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
@@ -63,7 +65,7 @@ void CubeSubstance::init(){
 
 void CubeBecher::init(){
     vid.initMode(BG0_SPR_BG1);
-    vid.bg0.image(vec(0,0), WhiteBkg);
+    vid.bg0.image(vec(0,0), Background);
 
     const auto &becher = vid.sprites[0];
     const auto &liquid = vid.sprites[1];
@@ -74,6 +76,7 @@ void CubeBecher::init(){
 
     liquid.setImage(Liquid, 0);
     liquid.move(0,68);
+    liquidAnim.lastY = liquid.y();
 
     drop.setImage(Drop, 0);
     //Não entendemos por que o eixo Y é -6 e não -32.
@@ -85,29 +88,37 @@ void CubeBecher::animate(float dt){
         const auto &liquid = vid.sprites[1];
         const auto &drop = vid.sprites[2];
 
-        bool dropped = false;
-
-        if (drop.y() < 160 - liquid.y()) {
-            drop.move(drop.x(), drop.y() + 10);
-        }
-        else {
-            dropped = true;
-        }
-
-        if(frame < Liquid.numFrames()){
-            if (dropped) {
-                liquid.setImage(Liquid, frame);
-                frame++;
-
-                if(liquid.y() > 0){
-                    liquid.move(liquid.x(), liquid.y() - 1);
+        for(int t = dropTicker.tick(dt); t ; t--) {
+            if (drop.y() - 32 < liquidAnim.lastY + 20) {
+                drop.move(drop.x(), drop.y() + 10);
+            } else {
+                dropAnim.animated = true;
+                if (liquidAnim.animated) {
+                    liquidAnim.animated = false;
                 }
             }
-        } else {
-            frame = 0;
-            liquid.setImage(Liquid, frame);
-            drop.move(drop.x(), -6);
-            move = false;
+        }
+
+
+        if (dropAnim.animated) {
+            for(int t = liquidTicker.tick(dt); t ; t--) {
+                if(liquidAnim.frame < Liquid.numFrames()){
+                    liquid.setImage(Liquid, liquidAnim.frame);
+                    liquidAnim.frame++;
+
+                    if(liquid.y() > 0){
+                        liquid.move(liquid.x(), liquid.y() - 1);
+                    }
+                } else {
+                    liquidAnim.frame = 0;
+                    liquid.setImage(Liquid, liquidAnim.frame);
+                    liquidAnim.lastY = liquid.y();
+                    liquidAnim.animated = true;
+                    drop.move(drop.x(), -6);
+                    dropAnim.animated = false;
+                    move = false;
+                }
+            }
         }
     }
 }

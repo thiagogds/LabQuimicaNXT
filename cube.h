@@ -79,6 +79,16 @@ struct SubstanceVolumeWrapper {
     float volume;
 };
 
+struct LiquidAnimation {
+    int lastY;
+    int frame;
+    bool animated;
+};
+
+struct DropAnimation {
+    bool animated;
+};
+
 class CubeBecher{
 public:
     CubeBecher(CubeID cube, App* app);
@@ -88,10 +98,13 @@ public:
 
     VideoBuffer vid;
 
-    TimeTicker ticker;
+    TimeTicker dropTicker;
+    TimeTicker liquidTicker;
 
-    unsigned frame;
     bool move;
+
+    LiquidAnimation liquidAnim;
+    DropAnimation dropAnim;
 
     SubstanceVolumeWrapper substances[4];
 
