@@ -239,8 +239,14 @@ void CubePhIndicator::calculate(float dt) {
             Calculator::mixSubstances(mApp->cubeBecher);
             ph = Calculator::calculatePh(mApp->cubeBecher);
 
-            LOG("pH: %f\n", ph);
-            LOG("Molar: %f\n", mApp->cubeBecher->mixedSubstance.molar);
+            vid.bg0rom.text(vec(1,5), "             ");
+            vid.bg0rom.text(vec(1,6), "             ");
+            String<20> str;
+            str << "pH: " << FixedFP(ph, 2, 3) << "\n";
+            str << "M: " <<  FixedFP(mApp->cubeBecher->mixedSubstance.molar, 2, 3) << "\n";
+            vid.bg0rom.text(vec(1,5), str);
+
+
         }
     }
 }
