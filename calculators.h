@@ -19,7 +19,7 @@ float Calculator::calculatePh(CubeBecher *becher) {
     float e = 2.30258509299404;
     float ph = -(Sifteo::log (substance.molar)/e);
 
-    if (substance.oh) {
+    if (substance.isBase()) {
         ph = 14 - ph;
     }
 
