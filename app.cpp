@@ -31,10 +31,15 @@ void App::animate(float dt){
     cubeBecher->animate(dt);
 }
 
+void App::calculate(float dt) {
+    cubePhIndicator->calculate(dt);
+}
+
 void App::run() {
     TimeStep ts;
     while(true) {
         animate(ts.delta());
+        calculate(ts.delta());
         System::paint();
         ts.next();
     }
@@ -67,6 +72,12 @@ void App::onNeighborAdd(unsigned firstID,
                                       secondID,
                                       secondSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborAdd(firstID,
+                                           firstSide,
+                                           secondID,
+                                           secondSide);
+            break ;
     };
 
     switch(secondID) {
@@ -75,6 +86,12 @@ void App::onNeighborAdd(unsigned firstID,
                                       secondSide,
                                       firstID,
                                       firstSide);
+            break ;
+        case 3:
+            cubePhIndicator->onNeighborAdd(secondID,
+                                           secondSide,
+                                           firstID,
+                                           firstSide);
             break ;
     };
 }
@@ -91,6 +108,12 @@ void App::onNeighborRemove(unsigned firstID,
                                          secondID,
                                          secondSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborRemove(firstID,
+                                              firstSide,
+                                              secondID,
+                                              secondSide);
+            break ;
     };
 
     switch(secondID) {
@@ -100,8 +123,11 @@ void App::onNeighborRemove(unsigned firstID,
                                          firstID,
                                          firstSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborRemove(secondID,
+                                              secondSide,
+                                              firstID,
+                                              firstSide);
+            break ;
     };
 }
-
-
-

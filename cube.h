@@ -114,6 +114,8 @@ public:
     Substance naoh = Base("NaOH", 1.0f, 1);
     Substance koh = Base("KOH", 1.0f, 1);
 
+    Substance mixedSubstance = Substance("", 0, 0, 0);
+
     void init();
     void animate(float dt);
     void addSubstance(Substance* substance, float volume);
@@ -140,7 +142,12 @@ public:
 
     VideoBuffer vid;
 
+    float ph;
+    bool calculateOn;
+    TimeTicker ticker;
+
     void init();
+    void calculate(float dt);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,

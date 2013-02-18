@@ -41,10 +41,13 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5)
     substances[3] = kohWrapper;
 }
 
-CubePhIndicator::CubePhIndicator(CubeID cube, App* app) {
+CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
+
+    ph= 0.0f;
+    calculateOn = false;
 }
 
 //########### Inits #################
@@ -226,6 +229,17 @@ void CubePipete::onTouch(unsigned id) {
     }
 }
 
+void CubePhIndicator::calculate(float dt) {
+    for(int t = ticker.tick(dt); t ; t--) {
+        if(calculateOn) {
+            //Calculator::mixSubstances();
+            //ph = Calculator::ph();
+
+            LOG("pH: %f\n", ph);
+        }
+    }
+}
+
 //######## onNeighborAdd Events ############
 
 void CubePipete::onNeighborAdd(unsigned pipeteID,
@@ -238,6 +252,13 @@ void CubePipete::onNeighborAdd(unsigned pipeteID,
     if(neighborID == 2 && neighborSide == TOP && pipeteSide == BOTTOM){
         connectedToBecher = true;
     }
+}
+
+void CubePhIndicator::onNeighborAdd(unsigned indicatorID,
+                                    unsigned indicatorSide,
+                                    unsigned neighborID,
+                                    unsigned neighborSide){
+    calculateOn = true;
 }
 
 //######## onNeighborRemove Events ############
@@ -254,4 +275,11 @@ void CubePipete::onNeighborRemove(unsigned pipeteID,
         connectedToBecher = false;
     }
 
+}
+
+void CubePhIndicator::onNeighborRemove(unsigned indicatorID,
+                                       unsigned indicatorSide,
+                                       unsigned neighborID,
+                                       unsigned neighborSide){
+    calculateOn = false;
 }

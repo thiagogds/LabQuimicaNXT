@@ -24,6 +24,7 @@ public:
     NOINLINE void init();
     NOINLINE void run();
     void animate(float dt);
+    void calculate(float dt);
 
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
