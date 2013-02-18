@@ -86,6 +86,7 @@ struct LiquidAnimation {
 };
 
 struct DropAnimation {
+    int frame;
     bool animated;
 };
 

@@ -20,15 +20,15 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[3] = &koh;
 }
 
-CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(10), liquidTicker(7) {
+CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
 
     move = false;
 
-    LiquidAnimation liquidAnim = {0,0,false};
-    DropAnimation dropAnim = {false};
+    LiquidAnimation liquidAnim = {0, 0, false};
+    DropAnimation dropAnim = {0, false};
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
@@ -49,8 +49,11 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) {
 
 //########### Inits #################
 void CubePipete::init(){
-    vid.initMode(BG0);
-    vid.bg0.image(vec(0,0), Pipete);
+    vid.initMode(BG0_SPR_BG1);
+
+    const auto &pipete = vid.sprites[0];
+    pipete.setImage(Pipete, 0);
+    pipete.move(0,0);
 }
 
 void CubeSubstance::init(){
@@ -78,7 +81,7 @@ void CubeBecher::init(){
     liquid.move(0,68);
     liquidAnim.lastY = liquid.y();
 
-    drop.setImage(Drop, 0);
+    drop.setImage(Drop, dropAnim.frame);
     //Não entendemos por que o eixo Y é -6 e não -32.
     drop.move(64 - (drop.width()/2),-6);
 }
@@ -91,6 +94,8 @@ void CubeBecher::animate(float dt){
         for(int t = dropTicker.tick(dt); t ; t--) {
             if (drop.y() - 32 < liquidAnim.lastY + 20) {
                 drop.move(drop.x(), drop.y() + 10);
+                dropAnim.frame = (dropAnim.frame + 1) % Drop.numFrames();
+                drop.setImage(Drop, dropAnim.frame);
             } else {
                 dropAnim.animated = true;
                 if (liquidAnim.animated) {
