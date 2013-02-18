@@ -40,6 +40,9 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5)
     substances[1] = hbrWrapper;
     substances[2] = naohWrapper;
     substances[3] = kohWrapper;
+
+    SubstanceVolumeWrapper mixedWrapper = {&mixedSubstance, 0};
+
 }
 
 CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
@@ -233,10 +236,11 @@ void CubePipete::onTouch(unsigned id) {
 void CubePhIndicator::calculate(float dt) {
     for(int t = ticker.tick(dt); t ; t--) {
         if(calculateOn) {
-            //Calculator::mixSubstances();
+            Calculator::mixSubstances(mApp->cubeBecher);
             ph = Calculator::calculatePh(mApp->cubeBecher);
 
             LOG("pH: %f\n", ph);
+            LOG("Molar: %f\n", mApp->cubeBecher->mixedSubstance.molar);
         }
     }
 }

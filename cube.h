@@ -108,6 +108,7 @@ public:
     DropAnimation dropAnim;
 
     SubstanceVolumeWrapper substances[4];
+    SubstanceVolumeWrapper mixedWrapper;
 
     Substance hcl = Acid("HCl", 1.0f, 1);
     Substance hbr = Acid("HBr", 1.0f, 1);
