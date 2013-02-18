@@ -5,9 +5,9 @@ using namespace Sifteo;
 
 static AssetSlot MainSlot = AssetSlot::allocate().bootstrap(GameAssets);
 
-static AssetSlot PipeteSlot = AssetSlot::allocate().bootstrap(PipeteAssets);
-
 static AssetSlot BecherSlot = AssetSlot::allocate().bootstrap(BecherAssets);
+
+static AssetSlot PipeteSlot = AssetSlot::allocate().bootstrap(PipeteAssets);
 
 static Metadata M = Metadata()
     .title("Sifteo Chemistry Lab")
