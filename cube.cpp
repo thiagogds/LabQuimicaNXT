@@ -1,6 +1,7 @@
 #include "cube.h"
 #include "app.h"
 #include "substance.h"
+#include "calculators.h"
 
 //########### Constructors ############
 CubePipete::CubePipete(CubeID cube, App* app) {
@@ -233,7 +234,7 @@ void CubePhIndicator::calculate(float dt) {
     for(int t = ticker.tick(dt); t ; t--) {
         if(calculateOn) {
             //Calculator::mixSubstances();
-            //ph = Calculator::ph();
+            ph = Calculator::calculatePh(mApp->cubeBecher);
 
             LOG("pH: %f\n", ph);
         }
