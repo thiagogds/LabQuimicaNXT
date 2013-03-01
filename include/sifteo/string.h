@@ -249,6 +249,8 @@ public:
      * The number returned is equal to the difference (this[i] - other[i])
      * where i is the index of the first non-matching character.
      */
+
+     //Alteramos essa função para usar o Macro do proprio sifteo(MIN) pois senão essa função não funciona.
     template <class T> int compare(const T &other) const {
         return strncmp(*this, other, MIN(capacity(), other.capacity()));
     }
