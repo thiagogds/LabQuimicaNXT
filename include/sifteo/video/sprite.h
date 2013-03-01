@@ -186,7 +186,7 @@ struct SpriteRef {
     /**
      * @brief Get this sprite's current X position, in pixels.
      */
-    unsigned x() const {
+    int x() const {
         uint16_t addr = ( offsetof(_SYSVideoRAM, spr[0].pos_x) +
                           sizeof(_SYSSpriteInfo) * id );
         return -(int8_t)_SYS_vbuf_peekb(&sys->vbuf, addr);
@@ -195,7 +195,7 @@ struct SpriteRef {
     /**
      * @brief Get this sprite's current Y position, in pixels.
      */
-    unsigned y() const {
+    int y() const {
         uint16_t addr = ( offsetof(_SYSVideoRAM, spr[0].pos_y) +
                           sizeof(_SYSSpriteInfo) * id );
         return -(int8_t)_SYS_vbuf_peekb(&sys->vbuf, addr);
@@ -283,7 +283,7 @@ struct SpriteLayer {
         _SYS_vbuf_fill(&sys.vbuf, _SYS_VA_SPR / 2, 0,
             sizeof(_SYSSpriteInfo) / 2 * NUM_SPRITES);
     }
-    
+
     /**
      * @brief Return the VideoBuffer associated with this drawable.
      */
