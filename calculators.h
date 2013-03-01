@@ -2,6 +2,6 @@
 
 class Calculator{
 public:
-    static void mixSubstances(CubeBecher *becher);
+    static void mixTwoSubstances(CubeBecher *becher, unsigned firstWrapperIndex);
     static float calculatePh(CubeBecher *becher);
 };

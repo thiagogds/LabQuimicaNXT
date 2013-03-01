@@ -115,7 +115,7 @@ public:
     Substance naoh = Base("NaOH", 1.0f, 1);
     Substance koh = Base("KOH", 1.0f, 1);
 
-    Substance mixedSubstance = Substance("", 0, 0, 0);
+    Substance mixedSubstance = Substance("", 0.0f, 0, 0);
 
     void init();
     void animate(float dt);

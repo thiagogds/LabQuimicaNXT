@@ -174,6 +174,7 @@ void CubeBecher::addSubstance(Substance* substance, float volume) {
     for(unsigned i = 0 ; i < 4 ; i++) {
         if(substances[i].substance->name == substance->name) {
             substances[i].volume += volume;
+            Calculator::mixTwoSubstances(mApp->cubeBecher, i);
             move = true;
             break;
         }
@@ -236,7 +237,6 @@ void CubePipete::onTouch(unsigned id) {
 void CubePhIndicator::calculate(float dt) {
     for(int t = ticker.tick(dt); t ; t--) {
         if(calculateOn) {
-            Calculator::mixSubstances(mApp->cubeBecher);
             ph = Calculator::calculatePh(mApp->cubeBecher);
 
             vid.bg0rom.text(vec(1,5), "             ");
