@@ -29,6 +29,10 @@ class Substance {
             return (this->h > 0);
         }
 
+        bool isNeutral (){
+            return (this->h == 0 && this->oh == 0);
+        }
+
         bool isSameType (Substance *subs){
             //Retorna verdadeiro para apenas no caso de ambos falsos ou ambos verdadeiros
             //TODO: Verificar o operador de XOR para esse caso

@@ -27,10 +27,22 @@ void App::init() {
     Events::neighborRemove.set(&App::onNeighborRemove, this);
 }
 
+void App::animate(float dt){
+    cubeBecher->animate(dt);
+}
+
+void App::calculate(float dt) {
+    cubePhIndicator->calculate(dt);
+}
+
 void App::run() {
     TimeStep ts;
-    ts.next();
-    System::paint();
+    while(true) {
+        animate(ts.delta());
+        calculate(ts.delta());
+        System::paint();
+        ts.next();
+    }
 }
 
 void App::onTouch(unsigned id) {
@@ -60,6 +72,12 @@ void App::onNeighborAdd(unsigned firstID,
                                       secondID,
                                       secondSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborAdd(firstID,
+                                           firstSide,
+                                           secondID,
+                                           secondSide);
+            break ;
     };
 
     switch(secondID) {
@@ -68,6 +86,12 @@ void App::onNeighborAdd(unsigned firstID,
                                       secondSide,
                                       firstID,
                                       firstSide);
+            break ;
+        case 3:
+            cubePhIndicator->onNeighborAdd(secondID,
+                                           secondSide,
+                                           firstID,
+                                           firstSide);
             break ;
     };
 }
@@ -84,6 +108,12 @@ void App::onNeighborRemove(unsigned firstID,
                                          secondID,
                                          secondSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborRemove(firstID,
+                                              firstSide,
+                                              secondID,
+                                              secondSide);
+            break ;
     };
 
     switch(secondID) {
@@ -93,8 +123,11 @@ void App::onNeighborRemove(unsigned firstID,
                                          firstID,
                                          firstSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborRemove(secondID,
+                                              secondSide,
+                                              firstID,
+                                              firstSide);
+            break ;
     };
 }
-
-
-

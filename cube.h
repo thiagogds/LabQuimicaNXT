@@ -16,7 +16,6 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
 
     const float GET_VOLUME = 0.0050f;
     const float MAX_VOLUME = 0.0100f;
@@ -50,7 +49,6 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
 
     unsigned activeSubstance = 0;
     Substance *substances[4];
@@ -81,6 +79,17 @@ struct SubstanceVolumeWrapper {
     float volume;
 };
 
+struct LiquidAnimation {
+    int lastY;
+    int frame;
+    bool animated;
+};
+
+struct DropAnimation {
+    int frame;
+    bool animated;
+};
+
 class CubeBecher{
 public:
     CubeBecher(CubeID cube, App* app);
@@ -89,16 +98,27 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
+
+    TimeTicker dropTicker;
+    TimeTicker liquidTicker;
+
+    bool move;
+
+    LiquidAnimation liquidAnim;
+    DropAnimation dropAnim;
 
     SubstanceVolumeWrapper substances[4];
+    SubstanceVolumeWrapper mixedWrapper;
 
     Substance hcl = Acid("HCl", 1.0f, 1);
     Substance hbr = Acid("HBr", 1.0f, 1);
     Substance naoh = Base("NaOH", 1.0f, 1);
     Substance koh = Base("KOH", 1.0f, 1);
 
+    Substance mixedSubstance = Substance("", 0.0f, 0, 0);
+
     void init();
+    void animate(float dt);
     void addSubstance(Substance* substance, float volume);
     void printSubstance(unsigned index);
     void onTouch(unsigned id);
@@ -121,10 +141,14 @@ public:
     CubeID mCube;
     App* mApp;
 
-    TiltShakeRecognizer motion;
     VideoBuffer vid;
 
+    float ph;
+    bool calculateOn;
+    TimeTicker ticker;
+
     void init();
+    void calculate(float dt);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,

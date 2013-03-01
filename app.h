@@ -3,6 +3,7 @@
 
 #include <sifteo.h>
 #include "cube.h"
+#include "assets.gen.h"
 
 using namespace Sifteo;
 
@@ -22,16 +23,18 @@ public:
 
     NOINLINE void init();
     NOINLINE void run();
+    void animate(float dt);
+    void calculate(float dt);
 
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
-    void onNeighborAdd(unsigned firstID, 
-                       unsigned firstSide, 
-                       unsigned secondID, 
+    void onNeighborAdd(unsigned firstID,
+                       unsigned firstSide,
+                       unsigned secondID,
                        unsigned secondSide);
-    void onNeighborRemove(unsigned firstID, 
+    void onNeighborRemove(unsigned firstID,
                           unsigned firstSide,
-                          unsigned secondID, 
+                          unsigned secondID,
                           unsigned secondSide);
 };
 

@@ -3,10 +3,11 @@ APP = labquimica
 include $(SDK_DIR)/Makefile.defs
 
 OBJS = \
-	$(ASSETS).gen.o \
-	main.o \
-	app.o \
-	cube.o \
+    $(ASSETS).gen.o \
+    main.o \
+    app.o \
+    cube.o \
+    calculators.o
 
 ASSETDEPS += *.png $(ASSETS).lua
 CDEPS += *.h
