@@ -64,13 +64,10 @@ void CubePipete::init(){
 }
 
 void CubeSubstance::init(){
-    vid.initMode(BG0_ROM);
-
-    String<20> str;
-    str << "I am cube\n";
-    str << "Substance\n\n";
-    vid.bg0rom.text(vec(1,2), str);
-    vid.bg0rom.text(vec(1,5), substances[activeSubstance]->name);
+    vid.initMode(BG0_SPR_BG1);
+    const auto &substance = vid.sprites[0];
+    substance.setImage(Substances, activeSubstance);
+    substance.move(0,0);
 }
 
 void CubeBecher::init(){
@@ -191,8 +188,8 @@ void CubeSubstance::onTouch(unsigned id) {
 
     if(cube.isTouching()){
         rotate();
-        vid.bg0rom.text(vec(1,5), "                  ");
-        vid.bg0rom.text(vec(1,5), substances[activeSubstance]->name);
+        const auto &substance = vid.sprites[0];
+        substance.setImage(Substances, activeSubstance);
     }
 }
 void CubePipete::onTouch(unsigned id) {
