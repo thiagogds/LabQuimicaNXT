@@ -6,6 +6,10 @@
 
 using namespace Sifteo;
 
+const int SUBSTANCES_NUMBER = 5;
+
+static TiltShakeRecognizer motion[CUBE_ALLOCATION];
+
 class App;
 
 struct SubstanceVolumeWrapper {
@@ -76,18 +80,18 @@ public:
     VideoBuffer vid;
 
     unsigned activeSubstance = 0;
-    Substance *substances[4];
+    Substance *substances[SUBSTANCES_NUMBER];
 
     Substance hcl = Acid("HCl", 1.0f, 1);
     Substance hbr = Acid("HBr", 1.0f, 1);
     Substance naoh = Base("NaOH", 1.0f, 1);
     Substance koh = Base("KOH", 1.0f, 1);
+    Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
     void init();
     void rotate();
     Substance* getCurrentSubstance();
     void onTouch(unsigned id);
-    void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
                        unsigned firstSide,
                        unsigned secondID,
@@ -116,13 +120,14 @@ public:
     LiquidAnimation liquidAnim;
     DropAnimation dropAnim;
 
-    SubstanceVolumeWrapper substances[4];
+    SubstanceVolumeWrapper substances[SUBSTANCES_NUMBER];
     SubstanceVolumeWrapper mixedWrapper;
 
     Substance hcl = Acid("HCl", 1.0f, 1);
     Substance hbr = Acid("HBr", 1.0f, 1);
     Substance naoh = Base("NaOH", 1.0f, 1);
     Substance koh = Base("KOH", 1.0f, 1);
+    Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
     Substance mixedSubstance = Substance("", 0.0f, 0, 0);
 
@@ -159,7 +164,6 @@ public:
     void init();
     void calculate(float dt);
     void onTouch(unsigned id);
-    void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
                        unsigned firstSide,
                        unsigned secondID,

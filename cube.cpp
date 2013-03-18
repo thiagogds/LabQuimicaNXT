@@ -8,6 +8,8 @@ CubePipete::CubePipete(CubeID cube, App* app): liquidTicker(7.5) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
+    motion[cube].attach(cube);
+
 
     move = false;
     getLiquid = true;
@@ -19,17 +21,20 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
+    motion[cube].attach(cube);
 
     substances[0] = &hcl;
     substances[1] = &hbr;
     substances[2] = &naoh;
     substances[3] = &koh;
+    substances[4] = &h2o;
 }
 
 CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
+    motion[cube].attach(cube);
 
     move = false;
 
@@ -40,11 +45,13 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5)
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
     SubstanceVolumeWrapper naohWrapper = {&naoh, 0};
     SubstanceVolumeWrapper kohWrapper = {&koh, 0};
+    SubstanceVolumeWrapper h2oWrapper = {&h2o, 0};
 
     substances[0] = hclWrapper;
     substances[1] = hbrWrapper;
     substances[2] = naohWrapper;
     substances[3] = kohWrapper;
+    substances[4] = h2oWrapper;
 
     SubstanceVolumeWrapper mixedWrapper = {&mixedSubstance, 0};
 
@@ -54,6 +61,7 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
+    motion[cube].attach(cube);
 
     ph= 0.0f;
     calculateOn = false;
@@ -62,6 +70,7 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
 //########### Inits #################
 void CubePipete::init(){
     vid.initMode(BG0_SPR_BG1);
+    vid.bg0.image(vec(0,0), Background);
 
     const auto &pipete = vid.sprites[0];
     const auto &liquid = vid.sprites[1];
@@ -141,7 +150,7 @@ void CubeBecher::printSubstance(unsigned index) {
 }
 
 void CubeBecher::addSubstance(Substance* substance, float volume) {
-    for(unsigned i = 0 ; i < 4 ; i++) {
+    for(unsigned i = 0 ; i < SUBSTANCES_NUMBER ; i++) {
         if(substances[i].substance->name == substance->name) {
             substances[i].volume += volume;
             Calculator::mixTwoSubstances(mApp->cubeBecher, i);
@@ -223,7 +232,7 @@ void CubePipete::animate(float dt){
 
 //######## onTouch Events ############
 void CubeSubstance::rotate() {
-    activeSubstance = (activeSubstance + 1) % 4;
+    activeSubstance = (activeSubstance + 1) % SUBSTANCES_NUMBER;
 }
 
 void CubeSubstance::onTouch(unsigned id) {
@@ -326,4 +335,50 @@ void CubePhIndicator::onNeighborRemove(unsigned indicatorID,
                                        unsigned neighborID,
                                        unsigned neighborSide){
     calculateOn = false;
+}
+//######## onAccelChange Events ############
+void CubePipete::onAccelChange(unsigned id)
+{
+    const auto &liquid = vid.sprites[1];
+
+    unsigned changeFlags = motion[id].update();
+    if (changeFlags) {
+        if (motion[id].shake) {
+            volume = 0.0f;
+            currentSubstance = 0;
+
+            liquid.setImage(Liquid, 0);
+            //Posição inicial do liquido, para não aparecer na tela
+            //Se a imagem mudar tem que mudar isso
+            liquid.move(0,72);
+        }
+    }
+}
+
+void CubeBecher::onAccelChange(unsigned id)
+{
+    unsigned changeFlags = motion[id].update();
+    if (changeFlags) {
+        if (motion[id].shake) {
+            liquidAnim.frame =  0 ;
+            liquidAnim.lastY = 0;
+            liquidAnim.animated = false;
+
+            for (int i = 0 ; i < SUBSTANCES_NUMBER ; i++) {
+                substances[i].volume = 0.0f;
+            }
+
+            mixedWrapper.volume = 0.0f;
+
+            mixedSubstance.name = "";
+            mixedSubstance.molar = 0.0f;
+            mixedSubstance.h = 0;
+            mixedSubstance.oh = 0;
+
+            const auto &liquid = vid.sprites[1];
+
+            liquid.setImage(Liquid, 0);
+            liquid.move(0,80);
+        }
+    }
 }

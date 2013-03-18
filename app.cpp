@@ -55,10 +55,11 @@ void App::onTouch(unsigned id) {
 }
 
 void App::onAccelChange(unsigned id) {
-    //switch(id) {
-    //    default: ; break ;
-    //    case 0: cubePipete->onAccelChange(id); break ;
-    //};
+    switch(id) {
+        default: ; break ;
+        case 0: cubePipete->onAccelChange(id); break ;
+        case 2: cubeBecher->onAccelChange(id); break ;
+    };
 }
 
 void App::onNeighborAdd(unsigned firstID,
