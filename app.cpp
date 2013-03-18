@@ -29,6 +29,7 @@ void App::init() {
 
 void App::animate(float dt){
     cubeBecher->animate(dt);
+    cubePipete->animate(dt);
 }
 
 void App::calculate(float dt) {
