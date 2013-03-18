@@ -24,6 +24,7 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[1] = &hbr;
     substances[2] = &naoh;
     substances[3] = &koh;
+    substances[4] = &h2o;
 }
 
 CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5) {
@@ -40,11 +41,13 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5)
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
     SubstanceVolumeWrapper naohWrapper = {&naoh, 0};
     SubstanceVolumeWrapper kohWrapper = {&koh, 0};
+    SubstanceVolumeWrapper h2oWrapper = {&h2o, 0};
 
     substances[0] = hclWrapper;
     substances[1] = hbrWrapper;
     substances[2] = naohWrapper;
     substances[3] = kohWrapper;
+    substances[4] = h2oWrapper;
 
     SubstanceVolumeWrapper mixedWrapper = {&mixedSubstance, 0};
 
@@ -141,7 +144,7 @@ void CubeBecher::printSubstance(unsigned index) {
 }
 
 void CubeBecher::addSubstance(Substance* substance, float volume) {
-    for(unsigned i = 0 ; i < 4 ; i++) {
+    for(unsigned i = 0 ; i < 5 ; i++) {
         if(substances[i].substance->name == substance->name) {
             substances[i].volume += volume;
             Calculator::mixTwoSubstances(mApp->cubeBecher, i);
@@ -223,7 +226,7 @@ void CubePipete::animate(float dt){
 
 //######## onTouch Events ############
 void CubeSubstance::rotate() {
-    activeSubstance = (activeSubstance + 1) % 4;
+    activeSubstance = (activeSubstance + 1) % 5;
 }
 
 void CubeSubstance::onTouch(unsigned id) {
