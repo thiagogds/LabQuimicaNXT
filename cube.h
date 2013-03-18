@@ -8,6 +8,8 @@ using namespace Sifteo;
 
 const int SUBSTANCES_NUMBER = 5;
 
+static TiltShakeRecognizer motion[CUBE_ALLOCATION];
+
 class App;
 
 struct SubstanceVolumeWrapper {
@@ -90,7 +92,6 @@ public:
     void rotate();
     Substance* getCurrentSubstance();
     void onTouch(unsigned id);
-    void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
                        unsigned firstSide,
                        unsigned secondID,
@@ -163,7 +164,6 @@ public:
     void init();
     void calculate(float dt);
     void onTouch(unsigned id);
-    void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
                        unsigned firstSide,
                        unsigned secondID,
