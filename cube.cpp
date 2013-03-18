@@ -116,7 +116,7 @@ void CubeBecher::animate(float dt){
                     liquidAnim.frame++;
 
                     if(liquid.y() > 0){
-                        liquid.move(liquid.x(), liquid.y() - 1);
+                        liquid.move(liquid.x(), liquid.y() - 5);
                     }
                 } else {
                     liquidAnim.frame = 0;
