@@ -6,6 +6,8 @@
 
 using namespace Sifteo;
 
+const int SUBSTANCES_NUMBER = 5;
+
 class App;
 
 struct SubstanceVolumeWrapper {
@@ -76,7 +78,7 @@ public:
     VideoBuffer vid;
 
     unsigned activeSubstance = 0;
-    Substance *substances[5];
+    Substance *substances[SUBSTANCES_NUMBER];
 
     Substance hcl = Acid("HCl", 1.0f, 1);
     Substance hbr = Acid("HBr", 1.0f, 1);
@@ -117,7 +119,7 @@ public:
     LiquidAnimation liquidAnim;
     DropAnimation dropAnim;
 
-    SubstanceVolumeWrapper substances[5];
+    SubstanceVolumeWrapper substances[SUBSTANCES_NUMBER];
     SubstanceVolumeWrapper mixedWrapper;
 
     Substance hcl = Acid("HCl", 1.0f, 1);

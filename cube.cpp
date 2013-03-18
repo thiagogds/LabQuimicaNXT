@@ -144,7 +144,7 @@ void CubeBecher::printSubstance(unsigned index) {
 }
 
 void CubeBecher::addSubstance(Substance* substance, float volume) {
-    for(unsigned i = 0 ; i < 5 ; i++) {
+    for(unsigned i = 0 ; i < SUBSTANCES_NUMBER ; i++) {
         if(substances[i].substance->name == substance->name) {
             substances[i].volume += volume;
             Calculator::mixTwoSubstances(mApp->cubeBecher, i);
@@ -226,7 +226,7 @@ void CubePipete::animate(float dt){
 
 //######## onTouch Events ############
 void CubeSubstance::rotate() {
-    activeSubstance = (activeSubstance + 1) % 5;
+    activeSubstance = (activeSubstance + 1) % SUBSTANCES_NUMBER;
 }
 
 void CubeSubstance::onTouch(unsigned id) {
