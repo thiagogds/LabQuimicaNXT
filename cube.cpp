@@ -82,7 +82,9 @@ void CubeBecher::init(){
     becher.move(0,0);
 
     liquid.setImage(Liquid, 0);
-    liquid.move(0,68);
+    //Posição inicial do liquido, para não aparecer na tela
+    //Se a imagem mudar tem que mudar isso
+    liquid.move(0,80);
     liquidAnim.lastY = liquid.y();
 
     drop.setImage(Drop, dropAnim.frame);
@@ -96,8 +98,10 @@ void CubeBecher::animate(float dt){
         const auto &drop = vid.sprites[2];
 
         for(int t = dropTicker.tick(dt); t ; t--) {
-            if (drop.y() - 32 < liquidAnim.lastY + 20) {
-                drop.move(drop.x(), drop.y() + 10);
+            //Teste para saber quando a gota chegou no liquido
+            //Se a posição inicial do liquido mudar tem que alterar o erro do lastY
+            if (drop.y() - 32 < liquidAnim.lastY + 8) {
+                drop.move(drop.x(), drop.y() + 10);//Velocidade que a gota desce
                 dropAnim.frame = (dropAnim.frame + 1) % Drop.numFrames();
                 drop.setImage(Drop, dropAnim.frame);
             } else {
@@ -116,7 +120,7 @@ void CubeBecher::animate(float dt){
                     liquidAnim.frame++;
 
                     if(liquid.y() > 0){
-                        liquid.move(liquid.x(), liquid.y() - 5);
+                        liquid.move(liquid.x(), liquid.y() - 5)//velocidade que o liquido sobe;
                     }
                 } else {
                     liquidAnim.frame = 0;

@@ -9,7 +9,7 @@ Background = image{"background.png", width=128, height=128}
 
 BecherAssets = group{quality=9.95}
 FlaskBkg = image{"erlenmeyer.png", width=128, height=128, pinned=true }
-Liquid = image{"animated-liquid.png", width=128, height=128, pinned=true}
+Liquid = image{"liquid.png", width=128, height=128, pinned=true}
 Drop = image{"drop.png", width=32, height=32, pinned=true}
 
 PipeteAssets = group{quality=9.95}
