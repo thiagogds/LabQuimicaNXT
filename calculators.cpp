@@ -32,16 +32,22 @@ void Calculator::mixTwoSubstances(CubeBecher *becher, unsigned firstWrapperIndex
     if (volume > 0) {
         float mols = 0.0;
         float molar = 0.0;
-
-        if (second_substance.isSameType (first_substance)) {
-            mols = first_substance->mol (first_volume) + second_substance.mol (second_volume);
-            if (first_substance->isBase()) {
+        if (first_substance->isNeutral()) {
+            mols = second_substance.mol (second_volume);
+            if (second_substance.isBase()) {
                 mols = mols * -1;
             }
-        } else if (first_substance->isAcid ()) {
-            mols = first_substance->mol (first_volume) - second_substance.mol (second_volume);
         } else {
-            mols = second_substance.mol (second_volume) - first_substance->mol (first_volume);
+            if (second_substance.isSameType (first_substance)) {
+                mols = first_substance->mol (first_volume) + second_substance.mol (second_volume);
+                if (first_substance->isBase()) {
+                    mols = mols * -1;
+                }
+            } else if (first_substance->isAcid ()) {
+                mols = first_substance->mol (first_volume) - second_substance.mol (second_volume);
+            } else {
+                mols = second_substance.mol (second_volume) - first_substance->mol (first_volume);
+            }
         }
 
         if (mols < 0) {

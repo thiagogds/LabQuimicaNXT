@@ -360,9 +360,17 @@ void CubeBecher::onAccelChange(unsigned id)
     unsigned changeFlags = motion[id].update();
     if (changeFlags) {
         if (motion[id].shake) {
+            const auto &liquid = vid.sprites[1];
+
+            liquid.setImage(Liquid, 0);
+            liquid.move(0,80);
+
             liquidAnim.frame =  0 ;
-            liquidAnim.lastY = 0;
+            liquidAnim.lastY = liquid.y();
             liquidAnim.animated = false;
+
+            dropAnim.frame = 0;
+            dropAnim.animated = false;
 
             for (int i = 0 ; i < SUBSTANCES_NUMBER ; i++) {
                 substances[i].volume = 0.0f;
@@ -374,11 +382,6 @@ void CubeBecher::onAccelChange(unsigned id)
             mixedSubstance.molar = 0.0f;
             mixedSubstance.h = 0;
             mixedSubstance.oh = 0;
-
-            const auto &liquid = vid.sprites[1];
-
-            liquid.setImage(Liquid, 0);
-            liquid.move(0,80);
         }
     }
 }
