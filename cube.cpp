@@ -4,10 +4,15 @@
 #include "calculators.h"
 
 //########### Constructors ############
-CubePipete::CubePipete(CubeID cube, App* app) {
+CubePipete::CubePipete(CubeID cube, App* app): liquidTicker(7.5) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
+
+    move = false;
+    getLiquid = true;
+
+    LiquidAnimation liquidAnim = {0, 0, false};
 }
 
 CubeSubstance::CubeSubstance(CubeID cube, App* app) {
@@ -59,18 +64,23 @@ void CubePipete::init(){
     vid.initMode(BG0_SPR_BG1);
 
     const auto &pipete = vid.sprites[0];
+    const auto &liquid = vid.sprites[1];
+
     pipete.setImage(Pipete, 0);
     pipete.move(0,0);
+
+    liquid.setImage(Liquid, 0);
+    //Posição inicial do liquido, para não aparecer na tela
+    //Se a imagem mudar tem que mudar isso
+    liquid.move(0,72);
+    liquidAnim.lastY = liquid.y();
 }
 
 void CubeSubstance::init(){
-    vid.initMode(BG0_ROM);
-
-    String<20> str;
-    str << "I am cube\n";
-    str << "Substance\n\n";
-    vid.bg0rom.text(vec(1,2), str);
-    vid.bg0rom.text(vec(1,5), substances[activeSubstance]->name);
+    vid.initMode(BG0_SPR_BG1);
+    const auto &substance = vid.sprites[0];
+    substance.setImage(Substances, activeSubstance);
+    substance.move(0,0);
 }
 
 void CubeBecher::init(){
@@ -85,54 +95,14 @@ void CubeBecher::init(){
     becher.move(0,0);
 
     liquid.setImage(Liquid, 0);
-    liquid.move(0,68);
+    //Posição inicial do liquido, para não aparecer na tela
+    //Se a imagem mudar tem que mudar isso
+    liquid.move(0,80);
     liquidAnim.lastY = liquid.y();
 
     drop.setImage(Drop, dropAnim.frame);
     //Não entendemos por que o eixo Y é -6 e não -32.
     drop.move(64 - (drop.width()/2),-6);
-}
-
-void CubeBecher::animate(float dt){
-    if(move){
-        const auto &liquid = vid.sprites[1];
-        const auto &drop = vid.sprites[2];
-
-        for(int t = dropTicker.tick(dt); t ; t--) {
-            if (drop.y() - 32 < liquidAnim.lastY + 20) {
-                drop.move(drop.x(), drop.y() + 10);
-                dropAnim.frame = (dropAnim.frame + 1) % Drop.numFrames();
-                drop.setImage(Drop, dropAnim.frame);
-            } else {
-                dropAnim.animated = true;
-                if (liquidAnim.animated) {
-                    liquidAnim.animated = false;
-                }
-            }
-        }
-
-
-        if (dropAnim.animated) {
-            for(int t = liquidTicker.tick(dt); t ; t--) {
-                if(liquidAnim.frame < Liquid.numFrames()){
-                    liquid.setImage(Liquid, liquidAnim.frame);
-                    liquidAnim.frame++;
-
-                    if(liquid.y() > 0){
-                        liquid.move(liquid.x(), liquid.y() - 1);
-                    }
-                } else {
-                    liquidAnim.frame = 0;
-                    liquid.setImage(Liquid, liquidAnim.frame);
-                    liquidAnim.lastY = liquid.y();
-                    liquidAnim.animated = true;
-                    drop.move(drop.x(), -6);
-                    dropAnim.animated = false;
-                    move = false;
-                }
-            }
-        }
-    }
 }
 
 void CubePhIndicator::init(){
@@ -181,6 +151,76 @@ void CubeBecher::addSubstance(Substance* substance, float volume) {
     }
 }
 
+//######## Animations ############
+void CubeBecher::animate(float dt){
+    if(move){
+        const auto &liquid = vid.sprites[1];
+        const auto &drop = vid.sprites[2];
+
+        for(int t = dropTicker.tick(dt); t ; t--) {
+            //Teste para saber quando a gota chegou no liquido
+            //Se a posição inicial do liquido mudar tem que alterar o erro do lastY
+            //Inversamente proporcional
+            if (drop.y() - 32 < liquidAnim.lastY + 8) {
+                drop.move(drop.x(), drop.y() + 10);//Velocidade que a gota desce
+                dropAnim.frame = (dropAnim.frame + 1) % Drop.numFrames();
+                drop.setImage(Drop, dropAnim.frame);
+            } else {
+                dropAnim.animated = true;
+                if (liquidAnim.animated) {
+                    liquidAnim.animated = false;
+                }
+            }
+        }
+
+
+        if (dropAnim.animated) {
+            for(int t = liquidTicker.tick(dt); t ; t--) {
+                if(liquidAnim.frame < Liquid.numFrames()){
+                    liquid.setImage(Liquid, liquidAnim.frame);
+                    liquidAnim.frame++;
+
+                    if(liquid.y() > 0){
+                        liquid.move(liquid.x(), liquid.y() - 5);//velocidade que o liquido sobe
+                    }
+                } else {
+                    liquidAnim.frame = 0;
+                    liquid.setImage(Liquid, liquidAnim.frame);
+                    liquidAnim.lastY = liquid.y();
+                    liquidAnim.animated = true;
+                    drop.move(drop.x(), -6);
+                    dropAnim.animated = false;
+                    move = false;
+                }
+            }
+        }
+    }
+}
+
+void CubePipete::animate(float dt){
+    if(move){
+        const auto &liquid = vid.sprites[1];
+
+        for(int t = liquidTicker.tick(dt); t ; t--) {
+            if(liquidAnim.frame < Liquid.numFrames()){
+                liquid.setImage(Liquid, liquidAnim.frame);
+                liquidAnim.frame++;
+
+                if (getLiquid){
+                    //maximo = 80
+                    liquid.move(liquid.x(), liquid.y() - 40);//velocidade que o liquido sobe
+                } else {
+                    liquid.move(liquid.x(), liquid.y() + 4);//velocidade que o liquido desce
+                }
+            } else {
+                liquidAnim.frame = 0;
+                liquid.setImage(Liquid, liquidAnim.frame);
+                move = false;
+            }
+        }
+    }
+}
+
 //######## onTouch Events ############
 void CubeSubstance::rotate() {
     activeSubstance = (activeSubstance + 1) % 4;
@@ -191,8 +231,8 @@ void CubeSubstance::onTouch(unsigned id) {
 
     if(cube.isTouching()){
         rotate();
-        vid.bg0rom.text(vec(1,5), "                  ");
-        vid.bg0rom.text(vec(1,5), substances[activeSubstance]->name);
+        const auto &substance = vid.sprites[0];
+        substance.setImage(Substances, activeSubstance);
     }
 }
 void CubePipete::onTouch(unsigned id) {
@@ -206,15 +246,10 @@ void CubePipete::onTouch(unsigned id) {
             if(currentVolume <= MAX_VOLUME) {
                 volume += GET_VOLUME;
 
-                //vid.bg0rom.text(vec(1,4), "                  ");
-
-                String<30> str;
-                str << "Volume: " << FixedFP(volume, 1, 5);
-                //vid.bg0rom.text(vec(1,4), str);
-
                 currentSubstance = connectedSubstance;
-                //vid.bg0rom.text(vec(1,5), "                  ");
-                //vid.bg0rom.text(vec(1,5), currentSubstance->name);
+
+                getLiquid = true;
+                move = true;
             }
         } else if (connectedToBecher && currentSubstance) {
             volume -= SET_VOLUME;
@@ -224,12 +259,10 @@ void CubePipete::onTouch(unsigned id) {
             if(volume < 0){
                 volume = 0.0f;
                 currentSubstance = 0;
-                //vid.bg0rom.text(vec(1,5), "                  ");
             }
 
-            String<30> str;
-            str << "Volume: " << FixedFP(volume, 1, 5);
-            //vid.bg0rom.text(vec(1,4), str);
+            getLiquid = false;
+            move = true;
         }
     }
 }

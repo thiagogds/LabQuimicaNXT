@@ -8,6 +8,23 @@ using namespace Sifteo;
 
 class App;
 
+struct SubstanceVolumeWrapper {
+    Substance *substance;
+    float volume;
+};
+
+struct LiquidAnimation {
+    int lastY;
+    int frame;
+    bool animated;
+};
+
+struct DropAnimation {
+    int frame;
+    bool animated;
+};
+
+
 class CubePipete{
 public:
     CubePipete(CubeID cube, App* app);
@@ -16,6 +33,13 @@ public:
     App* mApp;
 
     VideoBuffer vid;
+
+    TimeTicker liquidTicker;
+
+    LiquidAnimation liquidAnim;
+
+    bool move;
+    bool getLiquid;
 
     const float GET_VOLUME = 0.0050f;
     const float MAX_VOLUME = 0.0100f;
@@ -27,6 +51,7 @@ public:
 
     void init();
     bool isSameSubstance(Substance* substance);
+    void animate(float dt);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
@@ -72,22 +97,6 @@ public:
                           unsigned secondID,
                           unsigned secondSide);
 
-};
-
-struct SubstanceVolumeWrapper {
-    Substance *substance;
-    float volume;
-};
-
-struct LiquidAnimation {
-    int lastY;
-    int frame;
-    bool animated;
-};
-
-struct DropAnimation {
-    int frame;
-    bool animated;
 };
 
 class CubeBecher{
