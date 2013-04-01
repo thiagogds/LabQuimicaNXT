@@ -116,15 +116,17 @@ void CubeBecher::init(){
 
 void CubePhIndicator::init(){
     vid.initMode(BG0_SPR_BG1);
-    vid.bg0.image(vec(0,0), Background);
+    vid.bg0.image(vec(0,0), Ph);
 
     const auto &calculator = vid.sprites[0];
 
     // Allocate 16x2 tiles on BG1 for text at the bottom of the screen
-    vid.bg1.setMask(BG1Mask::filled(vec(0,14), vec(16,2)));
+    vid.bg1.setMask(BG1Mask::filled(vec(5,12), vec(8,2)));
 
-    calculator.setImage(Ph, 0);
-    calculator.move(0,0);
+    calculator.setImage(Pointer, 0);
+    calculator.move(0,72);
+
+    vid.bg1.text(vec(5,12), Font, "ph: 0.00");
 }
 
 //######## Get/Set/Others ##############
@@ -287,12 +289,12 @@ void CubePhIndicator::calculate(float dt) {
 
             const auto &calculator = vid.sprites[0];
 
-            calculator.setImage(Ph, round(ph));
-            calculator.move(0,0);
+            calculator.setImage(Pointer, round(ph));
+            calculator.move(0,72);
 
             String<20> str;
-            str << "pH: " << FixedFP(ph, 2, 3) << "\n";
-            vid.bg1.text(vec(3,14), Font, str);
+            str << "pH:" << FixedFP(ph, 2, 2) << "\n";
+            vid.bg1.text(vec(5,12), Font, str);
 
 
         }
