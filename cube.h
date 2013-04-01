@@ -42,20 +42,27 @@ public:
 
     LiquidAnimation liquidAnim;
 
-    bool move;
-    bool getLiquid;
+    bool move = false;
+    bool getLiquid = true;
 
-    const float GET_VOLUME = 0.0050f;
-    const float MAX_VOLUME = 0.0100f;
-    const float SET_VOLUME = 0.0005f;
+    static const float textSpeed = 0.2f;
+    static const float GET_VOLUME = 0.0050f;
+    static const float MAX_VOLUME = 0.0100f;
+    static const float SET_VOLUME = 0.0005f;
+
+    Float2 text = {0, 0};
+    Float2 textTarget = {0, 0};
+
     float volume = 0.0f;
     Substance *currentSubstance;
-    bool connectedToSubstance;
-    bool connectedToBecher;
+    bool connectedToSubstance = false;
+    bool connectedToBecher = false;
 
     void init();
+    void writeText(const char *str);
     bool isSameSubstance(Substance* substance);
     void animate(float dt);
+    void animateText(float dt);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
@@ -109,10 +116,10 @@ public:
     TimeTicker dropTicker;
     TimeTicker liquidTicker;
 
-    bool move;
+    bool move = false;
 
-    LiquidAnimation liquidAnim;
-    DropAnimation dropAnim;
+    LiquidAnimation liquidAnim = {0, 0, false};
+    DropAnimation dropAnim = {0, false};
 
     Substance mixedSubstance;
 
@@ -122,7 +129,6 @@ public:
     void init();
     void animate(float dt);
     void addSubstance(Substance* substance, float volume);
-    void printSubstance(unsigned index);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
@@ -145,8 +151,8 @@ public:
 
     VideoBuffer vid;
 
-    float ph;
-    bool calculateOn;
+    float ph = 0.0f;
+    bool calculateOn = false;
     TimeTicker ticker;
 
     void init();

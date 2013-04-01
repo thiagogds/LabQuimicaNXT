@@ -10,10 +10,6 @@ CubePipete::CubePipete(CubeID cube, App* app): liquidTicker(7.5), currentSubstan
     vid.attach(cube);
     motion[cube].attach(cube);
 
-
-    move = false;
-    getLiquid = true;
-
     LiquidAnimation liquidAnim = {0, 0, false};
 }
 
@@ -43,11 +39,6 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
     vid.attach(cube);
     motion[cube].attach(cube);
 
-    move = false;
-
-    LiquidAnimation liquidAnim = {0, 0, false};
-    DropAnimation dropAnim = {0, false};
-
     static Substance hcl = Acid("HCl", 1.0f, 1);
     static Substance hbr = Acid("HBr", 1.0f, 1);
     static Substance naoh = Base("NaOH", 1.0f, 1);
@@ -75,15 +66,14 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
-
-    ph= 0.0f;
-    calculateOn = false;
 }
 
 //########### Inits #################
 void CubePipete::init(){
     vid.initMode(BG0_SPR_BG1);
     vid.bg0.image(vec(0,0), Background);
+    vid.bg1.setMask(BG1Mask::filled(vec(5,14), vec(4,2)));
+    vid.bg1.text(vec(5,14), Font, "    ");
 
     const auto &pipete = vid.sprites[0];
     const auto &liquid = vid.sprites[1];
@@ -160,12 +150,8 @@ bool CubePipete::isSameSubstance(Substance* substance){
     };
 }
 
-void CubeBecher::printSubstance(unsigned index) {
-    int line = 4 + index;
-    vid.bg0rom.text(vec(1, line), "                 ");
-    String<20> substanceNameVolume;
-    substanceNameVolume << substances[index].substance->name << ": " <<  FixedFP(substances[index].volume, 1, 5);
-    vid.bg0rom.text(vec(1, line), substanceNameVolume);
+void CubePipete::writeText(const char *str) {
+    vid.bg1.text(vec(5,14), Font, str);
 }
 
 void CubeBecher::addSubstance(Substance* substance, float volume) {
@@ -226,26 +212,34 @@ void CubeBecher::animate(float dt){
 }
 
 void CubePipete::animate(float dt){
-    if(move){
-        const auto &liquid = vid.sprites[1];
+    for(int t = liquidTicker.tick(dt); t ; t--) {
+        text += (textTarget - text) * textSpeed;
+        vid.bg1.setPanning(text.round());
+        if(move){
+            const auto &liquid = vid.sprites[1];
 
-        for(int t = liquidTicker.tick(dt); t ; t--) {
-            if(liquidAnim.frame < Liquid.numFrames()){
-                liquid.setImage(Liquid, liquidAnim.frame);
-                liquidAnim.frame++;
+                if(liquidAnim.frame < Liquid.numFrames()){
+                    liquid.setImage(Liquid, liquidAnim.frame);
+                    liquidAnim.frame++;
 
-                if (getLiquid){
-                    //maximo = 80
-                    liquid.move(liquid.x(), liquid.y() - 40);//velocidade que o liquido sobe
+                    if (getLiquid){
+                        //maximo = 80
+                        liquid.move(liquid.x(), liquid.y() - 40);//velocidade que o liquido sobe
+                        writeText("50mL");
+                        text.set(5, 0);
+                        textTarget.set(5, 128);
+                    } else {
+                        liquid.move(liquid.x(), liquid.y() + 4);//velocidade que o liquido desce
+                        writeText(" 5mL");
+                        text.set(5, 128);
+                        textTarget.set(5, -20);
+                    }
                 } else {
-                    liquid.move(liquid.x(), liquid.y() + 4);//velocidade que o liquido desce
+                    liquidAnim.frame = 0;
+                    liquid.setImage(Liquid, liquidAnim.frame);
+                    move = false;
                 }
-            } else {
-                liquidAnim.frame = 0;
-                liquid.setImage(Liquid, liquidAnim.frame);
-                move = false;
             }
-        }
     }
 }
 
