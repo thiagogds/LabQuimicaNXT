@@ -80,13 +80,7 @@ public:
     VideoBuffer vid;
 
     unsigned activeSubstance = 0;
-    Substance *substances[SUBSTANCES_NUMBER];
-
-    Substance hcl = Acid("HCl", 1.0f, 1);
-    Substance hbr = Acid("HBr", 1.0f, 1);
-    Substance naoh = Base("NaOH", 1.0f, 1);
-    Substance koh = Base("KOH", 1.0f, 1);
-    Substance h2o = Substance("H2O", 0.0f, 0, 0);
+    Substance *substances[SUBSTANCES_NUMBER] = {0, 0, 0, 0};
 
     void init();
     void rotate();
@@ -120,16 +114,10 @@ public:
     LiquidAnimation liquidAnim;
     DropAnimation dropAnim;
 
+    Substance mixedSubstance;
+
     SubstanceVolumeWrapper substances[SUBSTANCES_NUMBER];
     SubstanceVolumeWrapper mixedWrapper;
-
-    Substance hcl = Acid("HCl", 1.0f, 1);
-    Substance hbr = Acid("HBr", 1.0f, 1);
-    Substance naoh = Base("NaOH", 1.0f, 1);
-    Substance koh = Base("KOH", 1.0f, 1);
-    Substance h2o = Substance("H2O", 0.0f, 0, 0);
-
-    Substance mixedSubstance = Substance("", 0.0f, 0, 0);
 
     void init();
     void animate(float dt);

@@ -4,7 +4,7 @@
 #include "calculators.h"
 
 //########### Constructors ############
-CubePipete::CubePipete(CubeID cube, App* app): liquidTicker(7.5) {
+CubePipete::CubePipete(CubeID cube, App* app): liquidTicker(7.5), currentSubstance(0) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
@@ -22,6 +22,11 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
+    static Substance hcl = Acid("HCl", 1.0f, 1);
+    static Substance hbr = Acid("HBr", 1.0f, 1);
+    static Substance naoh = Base("NaOH", 1.0f, 1);
+    static Substance koh = Base("KOH", 1.0f, 1);
+    static Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
     substances[0] = &hcl;
     substances[1] = &hbr;
@@ -30,7 +35,9 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[4] = &h2o;
 }
 
-CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5) {
+CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
+                                                liquidTicker(7.5),
+                                                mixedSubstance("", 0.0f, 0, 0){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
@@ -40,6 +47,12 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5)
 
     LiquidAnimation liquidAnim = {0, 0, false};
     DropAnimation dropAnim = {0, false};
+
+    static Substance hcl = Acid("HCl", 1.0f, 1);
+    static Substance hbr = Acid("HBr", 1.0f, 1);
+    static Substance naoh = Base("NaOH", 1.0f, 1);
+    static Substance koh = Base("KOH", 1.0f, 1);
+    static Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
