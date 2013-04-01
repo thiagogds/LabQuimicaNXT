@@ -99,6 +99,9 @@ void CubeBecher::init(){
     vid.initMode(BG0_SPR_BG1);
     vid.bg0.image(vec(0,0), Background);
 
+    vid.bg1.setMask(BG1Mask::filled(vec(5,14), vec(4,2)));
+    vid.bg1.text(vec(5,14), Font, "    ");
+
     const auto &becher = vid.sprites[0];
     const auto &liquid = vid.sprites[1];
     const auto &drop = vid.sprites[2];
@@ -151,6 +154,10 @@ bool CubePipete::isSameSubstance(Substance* substance){
 }
 
 void CubePipete::writeText(const char *str) {
+    vid.bg1.text(vec(5,14), Font, str);
+}
+
+void CubeBecher::writeText(const char *str) {
     vid.bg1.text(vec(5,14), Font, str);
 }
 

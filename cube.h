@@ -117,6 +117,10 @@ public:
     TimeTicker liquidTicker;
 
     bool move = false;
+    static const float textSpeed = 0.2f;
+
+    Float2 text = {0, 0};
+    Float2 textTarget = {0, 0};
 
     LiquidAnimation liquidAnim = {0, 0, false};
     DropAnimation dropAnim = {0, false};
@@ -128,6 +132,7 @@ public:
 
     void init();
     void animate(float dt);
+    void writeText(const char *str);
     void addSubstance(Substance* substance, float volume);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
