@@ -4,15 +4,11 @@
 #include "calculators.h"
 
 //########### Constructors ############
-CubePipete::CubePipete(CubeID cube, App* app): liquidTicker(7.5) {
+CubePipete::CubePipete(CubeID cube, App* app): liquidTicker(7.5), currentSubstance(0) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
-
-
-    move = false;
-    getLiquid = true;
 
     LiquidAnimation liquidAnim = {0, 0, false};
 }
@@ -22,6 +18,11 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
+    static Substance hcl = Acid("HCl", 1.0f, 1);
+    static Substance hbr = Acid("HBr", 1.0f, 1);
+    static Substance naoh = Base("NaOH", 1.0f, 1);
+    static Substance koh = Base("KOH", 1.0f, 1);
+    static Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
     substances[0] = &hcl;
     substances[1] = &hbr;
@@ -30,16 +31,19 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[4] = &h2o;
 }
 
-CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9), liquidTicker(7.5) {
+CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
+                                                liquidTicker(7.5),
+                                                mixedSubstance("", 0.0f, 0, 0){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
 
-    move = false;
-
-    LiquidAnimation liquidAnim = {0, 0, false};
-    DropAnimation dropAnim = {0, false};
+    static Substance hcl = Acid("HCl", 1.0f, 1);
+    static Substance hbr = Acid("HBr", 1.0f, 1);
+    static Substance naoh = Base("NaOH", 1.0f, 1);
+    static Substance koh = Base("KOH", 1.0f, 1);
+    static Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
@@ -62,15 +66,14 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
-
-    ph= 0.0f;
-    calculateOn = false;
 }
 
 //########### Inits #################
 void CubePipete::init(){
     vid.initMode(BG0_SPR_BG1);
     vid.bg0.image(vec(0,0), Background);
+    vid.bg1.setMask(BG1Mask::filled(vec(5,14), vec(4,2)));
+    vid.bg1.text(vec(5,14), Font, "    ");
 
     const auto &pipete = vid.sprites[0];
     const auto &liquid = vid.sprites[1];
@@ -96,6 +99,9 @@ void CubeBecher::init(){
     vid.initMode(BG0_SPR_BG1);
     vid.bg0.image(vec(0,0), Background);
 
+    vid.bg1.setMask(BG1Mask::filled(vec(5,14), vec(4,2)));
+    vid.bg1.text(vec(5,14), Font, "    ");
+
     const auto &becher = vid.sprites[0];
     const auto &liquid = vid.sprites[1];
     const auto &drop = vid.sprites[2];
@@ -116,15 +122,17 @@ void CubeBecher::init(){
 
 void CubePhIndicator::init(){
     vid.initMode(BG0_SPR_BG1);
-    vid.bg0.image(vec(0,0), Background);
+    vid.bg0.image(vec(0,0), Ph);
 
     const auto &calculator = vid.sprites[0];
 
     // Allocate 16x2 tiles on BG1 for text at the bottom of the screen
-    vid.bg1.setMask(BG1Mask::filled(vec(0,14), vec(16,2)));
+    vid.bg1.setMask(BG1Mask::filled(vec(5,12), vec(8,2)));
 
-    calculator.setImage(Ph, 0);
-    calculator.move(0,0);
+    calculator.setImage(Pointer, 0);
+    calculator.move(0,72);
+
+    vid.bg1.text(vec(5,12), Font, "ph: 0.00");
 }
 
 //######## Get/Set/Others ##############
@@ -145,12 +153,12 @@ bool CubePipete::isSameSubstance(Substance* substance){
     };
 }
 
-void CubeBecher::printSubstance(unsigned index) {
-    int line = 4 + index;
-    vid.bg0rom.text(vec(1, line), "                 ");
-    String<20> substanceNameVolume;
-    substanceNameVolume << substances[index].substance->name << ": " <<  FixedFP(substances[index].volume, 1, 5);
-    vid.bg0rom.text(vec(1, line), substanceNameVolume);
+void CubePipete::writeText(const char *str) {
+    vid.bg1.text(vec(5,14), Font, str);
+}
+
+void CubeBecher::writeText(const char *str) {
+    vid.bg1.text(vec(5,14), Font, str);
 }
 
 void CubeBecher::addSubstance(Substance* substance, float volume) {
@@ -211,26 +219,34 @@ void CubeBecher::animate(float dt){
 }
 
 void CubePipete::animate(float dt){
-    if(move){
-        const auto &liquid = vid.sprites[1];
+    for(int t = liquidTicker.tick(dt); t ; t--) {
+        text += (textTarget - text) * textSpeed;
+        vid.bg1.setPanning(text.round());
+        if(move){
+            const auto &liquid = vid.sprites[1];
 
-        for(int t = liquidTicker.tick(dt); t ; t--) {
-            if(liquidAnim.frame < Liquid.numFrames()){
-                liquid.setImage(Liquid, liquidAnim.frame);
-                liquidAnim.frame++;
+                if(liquidAnim.frame < Liquid.numFrames()){
+                    liquid.setImage(Liquid, liquidAnim.frame);
+                    liquidAnim.frame++;
 
-                if (getLiquid){
-                    //maximo = 80
-                    liquid.move(liquid.x(), liquid.y() - 40);//velocidade que o liquido sobe
+                    if (getLiquid){
+                        //maximo = 80
+                        liquid.move(liquid.x(), liquid.y() - 40);//velocidade que o liquido sobe
+                        writeText("50mL");
+                        text.set(5, 0);
+                        textTarget.set(5, 128);
+                    } else {
+                        liquid.move(liquid.x(), liquid.y() + 4);//velocidade que o liquido desce
+                        writeText(" 5mL");
+                        text.set(5, 128);
+                        textTarget.set(5, -20);
+                    }
                 } else {
-                    liquid.move(liquid.x(), liquid.y() + 4);//velocidade que o liquido desce
+                    liquidAnim.frame = 0;
+                    liquid.setImage(Liquid, liquidAnim.frame);
+                    move = false;
                 }
-            } else {
-                liquidAnim.frame = 0;
-                liquid.setImage(Liquid, liquidAnim.frame);
-                move = false;
             }
-        }
     }
 }
 
@@ -253,7 +269,7 @@ void CubePipete::onTouch(unsigned id) {
     Substance* connectedSubstance = mApp->cubeSubstance->getCurrentSubstance();
     float currentVolume;
 
-    if(cube.isTouching()){
+    if(!move && !mApp->cubeBecher->move && cube.isTouching()){
         if(connectedToSubstance && isSameSubstance(connectedSubstance)){
             currentVolume = volume + GET_VOLUME;
             if(currentVolume <= MAX_VOLUME) {
@@ -287,12 +303,12 @@ void CubePhIndicator::calculate(float dt) {
 
             const auto &calculator = vid.sprites[0];
 
-            calculator.setImage(Ph, round(ph));
-            calculator.move(0,0);
+            calculator.setImage(Pointer, round(ph));
+            calculator.move(0,72);
 
             String<20> str;
-            str << "pH: " << FixedFP(ph, 2, 3) << "\n";
-            vid.bg1.text(vec(3,14), Font, str);
+            str << "pH:" << FixedFP(ph, 2, 2) << "\n";
+            vid.bg1.text(vec(5,12), Font, str);
 
 
         }

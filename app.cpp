@@ -2,16 +2,16 @@
 #include "cube.h"
 
 App::App() {
-    CubePipete cPipete = CubePipete(0,this);
+    static CubePipete cPipete = CubePipete(0,this);
     this->cubePipete = &cPipete;
 
-    CubeSubstance cSubstance = CubeSubstance(1,this);
+    static CubeSubstance cSubstance = CubeSubstance(1,this);
     this->cubeSubstance = &cSubstance;
 
-    CubeBecher cBecher = CubeBecher(2,this);
+    static CubeBecher cBecher = CubeBecher(2,this);
     this->cubeBecher = &cBecher;
 
-    CubePhIndicator cPhIndicator = CubePhIndicator(3,this);
+    static CubePhIndicator cPhIndicator = CubePhIndicator(3,this);
     this->cubePhIndicator = &cPhIndicator;
 }
 

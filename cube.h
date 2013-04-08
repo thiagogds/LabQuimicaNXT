@@ -42,20 +42,27 @@ public:
 
     LiquidAnimation liquidAnim;
 
-    bool move;
-    bool getLiquid;
+    bool move = false;
+    bool getLiquid = true;
 
-    const float GET_VOLUME = 0.0050f;
-    const float MAX_VOLUME = 0.0100f;
-    const float SET_VOLUME = 0.0005f;
+    static const float textSpeed = 0.2f;
+    static const float GET_VOLUME = 0.0050f;
+    static const float MAX_VOLUME = 0.0100f;
+    static const float SET_VOLUME = 0.0005f;
+
+    Float2 text = {0, 0};
+    Float2 textTarget = {0, 0};
+
     float volume = 0.0f;
     Substance *currentSubstance;
-    bool connectedToSubstance;
-    bool connectedToBecher;
+    bool connectedToSubstance = false;
+    bool connectedToBecher = false;
 
     void init();
+    void writeText(const char *str);
     bool isSameSubstance(Substance* substance);
     void animate(float dt);
+    void animateText(float dt);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
@@ -80,13 +87,7 @@ public:
     VideoBuffer vid;
 
     unsigned activeSubstance = 0;
-    Substance *substances[SUBSTANCES_NUMBER];
-
-    Substance hcl = Acid("HCl", 1.0f, 1);
-    Substance hbr = Acid("HBr", 1.0f, 1);
-    Substance naoh = Base("NaOH", 1.0f, 1);
-    Substance koh = Base("KOH", 1.0f, 1);
-    Substance h2o = Substance("H2O", 0.0f, 0, 0);
+    Substance *substances[SUBSTANCES_NUMBER] = {0, 0, 0, 0};
 
     void init();
     void rotate();
@@ -115,26 +116,24 @@ public:
     TimeTicker dropTicker;
     TimeTicker liquidTicker;
 
-    bool move;
+    bool move = false;
+    static const float textSpeed = 0.2f;
 
-    LiquidAnimation liquidAnim;
-    DropAnimation dropAnim;
+    Float2 text = {0, 0};
+    Float2 textTarget = {0, 0};
+
+    LiquidAnimation liquidAnim = {0, 0, false};
+    DropAnimation dropAnim = {0, false};
+
+    Substance mixedSubstance;
 
     SubstanceVolumeWrapper substances[SUBSTANCES_NUMBER];
     SubstanceVolumeWrapper mixedWrapper;
 
-    Substance hcl = Acid("HCl", 1.0f, 1);
-    Substance hbr = Acid("HBr", 1.0f, 1);
-    Substance naoh = Base("NaOH", 1.0f, 1);
-    Substance koh = Base("KOH", 1.0f, 1);
-    Substance h2o = Substance("H2O", 0.0f, 0, 0);
-
-    Substance mixedSubstance = Substance("", 0.0f, 0, 0);
-
     void init();
     void animate(float dt);
+    void writeText(const char *str);
     void addSubstance(Substance* substance, float volume);
-    void printSubstance(unsigned index);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
@@ -157,8 +156,8 @@ public:
 
     VideoBuffer vid;
 
-    float ph;
-    bool calculateOn;
+    float ph = 0.0f;
+    bool calculateOn = false;
     TimeTicker ticker;
 
     void init();
