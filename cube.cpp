@@ -18,17 +18,26 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
+
     static Substance hcl = Acid("HCl", 1.0f, 1);
+    static Substance hcl01 = Acid("HCl01", 0.1f, 1);
     static Substance hbr = Acid("HBr", 1.0f, 1);
+    static Substance hbr005 = Acid("HBr005", 0.05f, 1);
     static Substance naoh = Base("NaOH", 1.0f, 1);
+    static Substance naoh01 = Base("NaOH01", 0.1f, 1);
     static Substance koh = Base("KOH", 1.0f, 1);
+    static Substance koh005 = Base("KOH005", 0.05f, 1);
     static Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
     substances[0] = &hcl;
-    substances[1] = &hbr;
-    substances[2] = &naoh;
-    substances[3] = &koh;
-    substances[4] = &h2o;
+    substances[1] = &hcl01;
+    substances[2] = &hbr;
+    substances[3] = &hbr005;
+    substances[4] = &naoh;
+    substances[5] = &naoh01;
+    substances[6] = &koh;
+    substances[7] = &koh005;
+    substances[8] = &h2o;
 }
 
 CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
@@ -40,22 +49,34 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
     motion[cube].attach(cube);
 
     static Substance hcl = Acid("HCl", 1.0f, 1);
+    static Substance hcl01 = Acid("HCl01", 0.1f, 1);
     static Substance hbr = Acid("HBr", 1.0f, 1);
+    static Substance hbr005 = Acid("HBr005", 0.05f, 1);
     static Substance naoh = Base("NaOH", 1.0f, 1);
+    static Substance naoh01 = Base("NaOH01", 0.1f, 1);
     static Substance koh = Base("KOH", 1.0f, 1);
+    static Substance koh005 = Base("KOH005", 0.05f, 1);
     static Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
     SubstanceVolumeWrapper hclWrapper = {&hcl,0};
+    SubstanceVolumeWrapper hcl01Wrapper = {&hcl01,0};
     SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
+    SubstanceVolumeWrapper hbr005Wrapper = {&hbr005, 0};
     SubstanceVolumeWrapper naohWrapper = {&naoh, 0};
+    SubstanceVolumeWrapper naoh01Wrapper = {&naoh01, 0};
     SubstanceVolumeWrapper kohWrapper = {&koh, 0};
+    SubstanceVolumeWrapper koh005Wrapper = {&koh005, 0};
     SubstanceVolumeWrapper h2oWrapper = {&h2o, 0};
 
     substances[0] = hclWrapper;
-    substances[1] = hbrWrapper;
-    substances[2] = naohWrapper;
-    substances[3] = kohWrapper;
-    substances[4] = h2oWrapper;
+    substances[1] = hcl01Wrapper;
+    substances[2] = hbrWrapper;
+    substances[3] = hbr005Wrapper;
+    substances[4] = naohWrapper;
+    substances[5] = naoh01Wrapper;
+    substances[6] = kohWrapper;
+    substances[7] = koh005Wrapper;
+    substances[8] = h2oWrapper;
 
     SubstanceVolumeWrapper mixedWrapper = {&mixedSubstance, 0};
 

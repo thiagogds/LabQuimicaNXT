@@ -6,7 +6,7 @@
 
 using namespace Sifteo;
 
-const int SUBSTANCES_NUMBER = 5;
+static const int SUBSTANCES_NUMBER = 9;
 
 static TiltShakeRecognizer motion[CUBE_ALLOCATION];
 
