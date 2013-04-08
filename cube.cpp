@@ -269,7 +269,7 @@ void CubePipete::onTouch(unsigned id) {
     Substance* connectedSubstance = mApp->cubeSubstance->getCurrentSubstance();
     float currentVolume;
 
-    if(cube.isTouching()){
+    if(!move && !mApp->cubeBecher->move && cube.isTouching()){
         if(connectedToSubstance && isSameSubstance(connectedSubstance)){
             currentVolume = volume + GET_VOLUME;
             if(currentVolume <= MAX_VOLUME) {
