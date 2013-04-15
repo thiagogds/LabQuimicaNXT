@@ -86,8 +86,8 @@ public:
 
     VideoBuffer vid;
 
-    unsigned activeSubstance = 0;
-    Substance *substances[SUBSTANCES_NUMBER] = {0, 0, 0, 0};
+    unsigned activeSubstance;
+    Substance *substances[SUBSTANCES_NUMBER];
 
     void init();
     void rotate();

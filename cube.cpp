@@ -55,6 +55,9 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[6] = &koh;
     substances[7] = &koh005;
     substances[8] = &h2o;
+
+    static unsigned activeSubstance = 0;
+    static Substance *substances[SUBSTANCES_NUMBER] = {0, 0, 0, 0};
 }
 
 CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
