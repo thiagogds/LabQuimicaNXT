@@ -1,43 +1,24 @@
 #ifndef _SUBSTANCE_H
 #define _SUBSTANCE_H
 
+#include <sifteo.h>
+
 using namespace Sifteo;
 
 class Substance {
     public:
+        Substance(const char *name, float molar, int h, int oh);
+
         String<8> name;
         float molar;
         int h;
         int oh;
 
-        Substance (const char *name, float molar, int h, int oh){
-            this->name << name;
-            this->molar = molar;
-            this->h = h;
-            this->oh = oh;
-        }
-
-        float mol (float volume){
-            return this->molar * volume;
-        }
-
-        bool isBase (){
-            return (this->oh > 0);
-        }
-
-        bool isAcid (){
-            return (this->h > 0);
-        }
-
-        bool isNeutral (){
-            return (this->h == 0 && this->oh == 0);
-        }
-
-        bool isSameType (Substance *subs){
-            //Retorna verdadeiro para apenas no caso de ambos falsos ou ambos verdadeiros
-            //TODO: Verificar o operador de XOR para esse caso
-            return !(this->h > 0 ^ subs->h > 0);
-        }
+        float mol(float volume);
+        bool isBase();
+        bool isAcid();
+        bool isNeutral();
+        bool isSameType(Substance* substance);
 };
 
 class Acid : public Substance {
