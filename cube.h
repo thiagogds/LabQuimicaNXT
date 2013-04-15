@@ -87,7 +87,18 @@ public:
     VideoBuffer vid;
 
     unsigned activeSubstance;
-    Substance *substances[SUBSTANCES_NUMBER];
+
+    Acid hcl;
+    Acid hcl01;
+    Acid hbr;
+    Acid hbr005;
+    Base naoh;
+    Base naoh01;
+    Base koh;
+    Base koh005;
+    Substance h2o;
+
+    Substance* substances[SUBSTANCES_NUMBER];
 
     void init();
     void rotate();

@@ -14,33 +14,24 @@ CubePipete::CubePipete(CubeID cube, App* app)
     vid.attach(cube);
     motion[cube].attach(cube);
 
-    const float textSpeed = 0.2f;
-    const float MAX_VOLUME = 0.0100f;
-    const float SET_VOLUME = 0.0005f;
-
     static Float2 text;
     static Float2 textTarget;
-
-    static LiquidAnimation liquidAnim;
 }
 
-CubeSubstance::CubeSubstance(CubeID cube, App* app) {
+CubeSubstance::CubeSubstance(CubeID cube, App* app)
+    : hcl("HCl", 1.0f, 1),
+      hcl01("HCl01", 0.1f, 1),
+      hbr("HBr", 1.0f, 1),
+      hbr005("HBr005", 0.05f, 1),
+      naoh("NaOH", 1.0f, 1),
+      naoh01("NaOH01", 0.1f, 1),
+      koh("KOH", 1.0f, 1),
+      koh005("KOH005", 0.05f, 1),
+      h2o("H2O", 0.0f, 0, 0) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
-
-    static Substance hcl = Acid("HCl", 1.0f, 1);
-    static Substance hcl01 = Acid("HCl01", 0.1f, 1);
-    static Substance hbr = Acid("HBr", 1.0f, 1);
-    static Substance hbr005 = Acid("HBr005", 0.05f, 1);
-    static Substance naoh = Base("NaOH", 1.0f, 1);
-    static Substance naoh01 = Base("NaOH01", 0.1f, 1);
-    static Substance koh = Base("KOH", 1.0f, 1);
-    static Substance koh005 = Base("KOH005", 0.05f, 1);
-    static Substance h2o = Substance("H2O", 0.0f, 0, 0);
-
-    static Substance *substances[SUBSTANCES_NUMBER] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     substances[0] = &hcl;
     substances[1] = &hcl01;
@@ -52,12 +43,13 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[7] = &koh005;
     substances[8] = &h2o;
 
-    static unsigned activeSubstance = 0;
+
+    static unsigned activeSubstance;
 }
 
-CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
-                                                liquidTicker(7.5),
-                                                mixedSubstance("", 0.0f, 0, 0){
+CubeBecher::CubeBecher(CubeID cube, App* app)
+    : dropTicker(9), liquidTicker(7.5), move(false),
+      textSpeed(0.2f), mixedSubstance("", 0.0f, 0, 0){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
@@ -92,15 +84,6 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
     substances[6] = kohWrapper;
     substances[7] = koh005Wrapper;
     substances[8] = h2oWrapper;
-
-    static bool move = false;
-    static const float textSpeed = 0.2f;
-
-    static Float2 text = {0, 0};
-    static Float2 textTarget = {0, 0};
-
-    static LiquidAnimation liquidAnim = {0, 0, false};
-    static DropAnimation dropAnim = {0, false};
 
     static SubstanceVolumeWrapper mixedWrapper = {&mixedSubstance, 0};
 
