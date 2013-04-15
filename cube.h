@@ -157,8 +157,8 @@ public:
 
     VideoBuffer vid;
 
-    float ph = 0.0f;
-    bool calculateOn = false;
+    float ph;
+    bool calculateOn;
     TimeTicker ticker;
 
     void init();

@@ -117,6 +117,9 @@ CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
+
+    static float ph = 0.0f;
+    static bool calculateOn = false;
 }
 
 //########### Inits #################
