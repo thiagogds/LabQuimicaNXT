@@ -42,21 +42,21 @@ public:
 
     LiquidAnimation liquidAnim;
 
-    bool move = false;
-    bool getLiquid = true;
+    bool move;
+    bool getLiquid;
 
-    static const float textSpeed = 0.2f;
-    static const float GET_VOLUME = 0.0050f;
-    static const float MAX_VOLUME = 0.0100f;
-    static const float SET_VOLUME = 0.0005f;
+    float textSpeed;
+    float GET_VOLUME;
+    float MAX_VOLUME;
+    float SET_VOLUME;
 
-    Float2 text = {0, 0};
-    Float2 textTarget = {0, 0};
+    Float2 text;
+    Float2 textTarget;
 
-    float volume = 0.0f;
+    float volume;
     Substance *currentSubstance;
-    bool connectedToSubstance = false;
-    bool connectedToBecher = false;
+    bool connectedToSubstance;
+    bool connectedToBecher;
 
     void init();
     void writeText(const char *str);
