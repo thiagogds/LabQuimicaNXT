@@ -46,6 +46,8 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     static Substance koh005 = Base("KOH005", 0.05f, 1);
     static Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
+    static Substance *substances[SUBSTANCES_NUMBER] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+
     substances[0] = &hcl;
     substances[1] = &hcl01;
     substances[2] = &hbr;
@@ -57,7 +59,6 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[8] = &h2o;
 
     static unsigned activeSubstance = 0;
-    static Substance *substances[SUBSTANCES_NUMBER] = {0, 0, 0, 0};
 }
 
 CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
@@ -78,15 +79,15 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
     static Substance koh005 = Base("KOH005", 0.05f, 1);
     static Substance h2o = Substance("H2O", 0.0f, 0, 0);
 
-    SubstanceVolumeWrapper hclWrapper = {&hcl,0};
-    SubstanceVolumeWrapper hcl01Wrapper = {&hcl01,0};
-    SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
-    SubstanceVolumeWrapper hbr005Wrapper = {&hbr005, 0};
-    SubstanceVolumeWrapper naohWrapper = {&naoh, 0};
-    SubstanceVolumeWrapper naoh01Wrapper = {&naoh01, 0};
-    SubstanceVolumeWrapper kohWrapper = {&koh, 0};
-    SubstanceVolumeWrapper koh005Wrapper = {&koh005, 0};
-    SubstanceVolumeWrapper h2oWrapper = {&h2o, 0};
+    static SubstanceVolumeWrapper hclWrapper = {&hcl,0};
+    static SubstanceVolumeWrapper hcl01Wrapper = {&hcl01,0};
+    static SubstanceVolumeWrapper hbrWrapper = {&hbr, 0};
+    static SubstanceVolumeWrapper hbr005Wrapper = {&hbr005, 0};
+    static SubstanceVolumeWrapper naohWrapper = {&naoh, 0};
+    static SubstanceVolumeWrapper naoh01Wrapper = {&naoh01, 0};
+    static SubstanceVolumeWrapper kohWrapper = {&koh, 0};
+    static SubstanceVolumeWrapper koh005Wrapper = {&koh005, 0};
+    static SubstanceVolumeWrapper h2oWrapper = {&h2o, 0};
 
     substances[0] = hclWrapper;
     substances[1] = hcl01Wrapper;
@@ -98,7 +99,16 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
     substances[7] = koh005Wrapper;
     substances[8] = h2oWrapper;
 
-    SubstanceVolumeWrapper mixedWrapper = {&mixedSubstance, 0};
+    static bool move = false;
+    static const float textSpeed = 0.2f;
+
+    static Float2 text = {0, 0};
+    static Float2 textTarget = {0, 0};
+
+    static LiquidAnimation liquidAnim = {0, 0, false};
+    static DropAnimation dropAnim = {0, false};
+
+    static SubstanceVolumeWrapper mixedWrapper = {&mixedSubstance, 0};
 
 }
 

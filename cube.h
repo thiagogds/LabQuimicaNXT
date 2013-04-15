@@ -116,17 +116,18 @@ public:
     TimeTicker dropTicker;
     TimeTicker liquidTicker;
 
-    bool move = false;
-    static const float textSpeed = 0.2f;
+    bool move;
+    float textSpeed;
 
-    Float2 text = {0, 0};
-    Float2 textTarget = {0, 0};
+    Float2 text;
+    Float2 textTarget;
 
-    LiquidAnimation liquidAnim = {0, 0, false};
-    DropAnimation dropAnim = {0, false};
+    LiquidAnimation liquidAnim;
+    DropAnimation dropAnim;
 
     Substance mixedSubstance;
 
+    //Pode ser que tenhamos que colocar como ponteiro para usar static.
     SubstanceVolumeWrapper substances[SUBSTANCES_NUMBER];
     SubstanceVolumeWrapper mixedWrapper;
 
