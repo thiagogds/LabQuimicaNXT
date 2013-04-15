@@ -5,29 +5,23 @@
 
 //########### Constructors ############
 CubePipete::CubePipete(CubeID cube, App* app)
-    : liquidTicker(7.5), currentSubstance(0) {
+    : liquidTicker(7.5), move(false), getLiquid(false),
+      textSpeed(0.2f), GET_VOLUME(0.0050f), MAX_VOLUME(0.0100f),
+      SET_VOLUME(0.0005f), volume(0.0f), currentSubstance(0),
+      connectedToSubstance(false), connectedToBecher(false){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
 
-    static bool move = false;
-    static bool getLiquid = true;
+    const float textSpeed = 0.2f;
+    const float MAX_VOLUME = 0.0100f;
+    const float SET_VOLUME = 0.0005f;
 
-    static const float textSpeed = 0.2f;
-    static const float GET_VOLUME = 0.0050f;
-    static const float MAX_VOLUME = 0.0100f;
-    static const float SET_VOLUME = 0.0005f;
+    static Float2 text;
+    static Float2 textTarget;
 
-    static Float2 text = {0, 0};
-    static Float2 textTarget = {0, 0};
-
-    static float volume = 0.0f;
-
-    static bool connectedToSubstance = false;
-    static bool connectedToBecher = false;
-
-    static LiquidAnimation liquidAnim = {0, 0, false};
+    static LiquidAnimation liquidAnim;
 }
 
 CubeSubstance::CubeSubstance(CubeID cube, App* app) {
@@ -139,7 +133,6 @@ void CubePipete::init(){
     //Posição inicial do liquido, para não aparecer na tela
     //Se a imagem mudar tem que mudar isso
     liquid.move(0,72);
-    liquidAnim.lastY = liquid.y();
 }
 
 void CubeSubstance::init(){

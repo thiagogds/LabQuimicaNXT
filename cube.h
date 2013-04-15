@@ -45,10 +45,10 @@ public:
     bool move;
     bool getLiquid;
 
-    float textSpeed;
-    float GET_VOLUME;
-    float MAX_VOLUME;
-    float SET_VOLUME;
+    const float textSpeed;
+    const float GET_VOLUME;
+    const float MAX_VOLUME;
+    const float SET_VOLUME;
 
     Float2 text;
     Float2 textTarget;
