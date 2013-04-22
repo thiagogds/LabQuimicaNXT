@@ -167,13 +167,11 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-
-    float ph;
     bool calculateOn;
     TimeTicker ticker;
 
     void init();
-    void calculate(float dt);
+    void calculate();
     void onTouch(unsigned id);
     void onNeighborAdd(unsigned firstID,
                        unsigned firstSide,

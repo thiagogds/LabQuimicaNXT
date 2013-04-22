@@ -28,19 +28,19 @@ void App::init() {
 }
 
 void App::animate(float dt){
-    cubeBecher->animate(dt);
-    cubePipete->animate(dt);
+    this->cubeBecher->animate(dt);
+    this->cubePipete->animate(dt);
 }
 
-void App::calculate(float dt) {
-    cubePhIndicator->calculate(dt);
+void App::calculate() {
+    this->cubePhIndicator->calculate();
 }
 
 void App::run() {
     TimeStep ts;
     while(true) {
         animate(ts.delta());
-        calculate(ts.delta());
+        calculate();
         System::paint();
         ts.next();
     }
