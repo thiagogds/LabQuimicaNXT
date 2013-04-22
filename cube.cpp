@@ -7,8 +7,8 @@
 CubePipete::CubePipete(CubeID cube, App* app)
     : liquidTicker(7.5), move(false), getLiquid(false),
       textSpeed(0.2f), GET_VOLUME(0.0050f), MAX_VOLUME(0.0100f),
-      SET_VOLUME(0.0005f), volume(0.0f), currentSubstance(0),
-      connectedToSubstance(false), connectedToBecher(false){
+      SET_VOLUME(0.0005f), volume(0.0f), connectedToSubstance(false),
+      connectedToBecher(false){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
@@ -16,6 +16,8 @@ CubePipete::CubePipete(CubeID cube, App* app)
 
     static Float2 text;
     static Float2 textTarget;
+
+    static Substance* currentSubstance;
 }
 
 CubeSubstance::CubeSubstance(CubeID cube, App* app)
@@ -89,13 +91,11 @@ CubeBecher::CubeBecher(CubeID cube, App* app)
 
 }
 
-CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
+CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : calculateOn(false) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
-
-    static float ph = 0.0f;
     static bool calculateOn = false;
 }
 
