@@ -326,22 +326,18 @@ void CubePipete::onTouch(unsigned id) {
     }
 }
 
-void CubePhIndicator::calculate(float dt) {
-    for(int t = ticker.tick(dt); t ; t--) {
-        if(calculateOn) {
-            ph = Calculator::calculatePh(mApp->cubeBecher);
+void CubePhIndicator::calculate() {
+    if (calculateOn) {
+        float ph = Calculator::calculatePh(mApp->cubeBecher);
 
-            const auto &calculator = vid.sprites[0];
+        const auto &calculator = vid.sprites[0];
 
-            calculator.setImage(Pointer, round(ph));
-            calculator.move(0,72);
+        calculator.setImage(Pointer, round(ph));
+        calculator.move(0,72);
 
-            String<20> str;
-            str << "pH:" << FixedFP(ph, 2, 2) << "\n";
-            vid.bg1.text(vec(5,12), Font, str);
-
-
-        }
+        String<20> str;
+        str << "pH:" << FixedFP(ph, 2, 2) << "\n";
+        vid.bg1.text(vec(5,12), Font, str);
     }
 }
 
