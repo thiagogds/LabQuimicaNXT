@@ -1,21 +1,25 @@
 #include "app.h"
 #include "cube.h"
 
-App::App() {
-    static CubePipete cPipete = CubePipete(0,this);
-    this->cubePipete = &cPipete;
-
-    static CubeSubstance cSubstance = CubeSubstance(1,this);
-    this->cubeSubstance = &cSubstance;
-
-    static CubeBecher cBecher = CubeBecher(2,this);
-    this->cubeBecher = &cBecher;
-
-    static CubePhIndicator cPhIndicator = CubePhIndicator(3,this);
-    this->cubePhIndicator = &cPhIndicator;
+App::App() : cubePipete(0),
+             cubeSubstance(0),
+             cubeBecher(0),
+             cubePhIndicator(0){
 }
 
 void App::init() {
+    static CubePipete cPipete = CubePipete(0,this);
+    cubePipete = &cPipete;
+
+    static CubeSubstance cSubstance = CubeSubstance(1,this);
+    cubeSubstance = &cSubstance;
+
+    static CubeBecher cBecher = CubeBecher(2,this);
+    cubeBecher = &cBecher;
+
+    static CubePhIndicator cPhIndicator = CubePhIndicator(3,this);
+    cubePhIndicator = &cPhIndicator;
+
     cubePipete->init();
     cubeSubstance->init();
     cubeBecher->init();
