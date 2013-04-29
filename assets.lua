@@ -1,6 +1,8 @@
 -- Metadata
-GameAssets = group{quality=9.95}
+IconAssets = group{quality=8}
 Icon = image{"icon.png"}
+
+GameAssets = group{quality=9.95}
 Background = image{"background.png", width=128, height=128}
 Ph = image{"medidor-ph-128x128.png", height=128, width=128 }
 

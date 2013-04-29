@@ -20,9 +20,7 @@ void main()
     App app;
     app.init();
 
-    while (1) {
-	    app.run();
-	}
+    app.run();
 }
 
 

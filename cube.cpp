@@ -5,48 +5,35 @@
 
 //########### Constructors ############
 CubePipete::CubePipete(CubeID cube, App* app)
-    : liquidTicker(7.5), currentSubstance(0) {
+    : liquidTicker(7.5), move(false), getLiquid(false),
+      textSpeed(0.2f), GET_VOLUME(0.0050f), MAX_VOLUME(0.0100f),
+      SET_VOLUME(0.0005f), volume(0.0f), connectedToSubstance(false),
+      connectedToBecher(false){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
 
-    static bool move = false;
-    static bool getLiquid = true;
+    static Float2 text;
+    static Float2 textTarget;
 
-    static const float textSpeed = 0.2f;
-    static const float GET_VOLUME = 0.0050f;
-    static const float MAX_VOLUME = 0.0100f;
-    static const float SET_VOLUME = 0.0005f;
-
-    static Float2 text = {0, 0};
-    static Float2 textTarget = {0, 0};
-
-    static float volume = 0.0f;
-
-    static bool connectedToSubstance = false;
-    static bool connectedToBecher = false;
-
-    static LiquidAnimation liquidAnim = {0, 0, false};
+    static Substance* currentSubstance;
 }
 
-CubeSubstance::CubeSubstance(CubeID cube, App* app) {
+CubeSubstance::CubeSubstance(CubeID cube, App* app)
+    : hcl("HCl", 1.0f, 1),
+      hcl01("HCl01", 0.1f, 1),
+      hbr("HBr", 1.0f, 1),
+      hbr005("HBr005", 0.05f, 1),
+      naoh("NaOH", 1.0f, 1),
+      naoh01("NaOH01", 0.1f, 1),
+      koh("KOH", 1.0f, 1),
+      koh005("KOH005", 0.05f, 1),
+      h2o("H2O", 0.0f, 0, 0) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
-
-    static Substance hcl = Acid("HCl", 1.0f, 1);
-    static Substance hcl01 = Acid("HCl01", 0.1f, 1);
-    static Substance hbr = Acid("HBr", 1.0f, 1);
-    static Substance hbr005 = Acid("HBr005", 0.05f, 1);
-    static Substance naoh = Base("NaOH", 1.0f, 1);
-    static Substance naoh01 = Base("NaOH01", 0.1f, 1);
-    static Substance koh = Base("KOH", 1.0f, 1);
-    static Substance koh005 = Base("KOH005", 0.05f, 1);
-    static Substance h2o = Substance("H2O", 0.0f, 0, 0);
-
-    static Substance *substances[SUBSTANCES_NUMBER] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     substances[0] = &hcl;
     substances[1] = &hcl01;
@@ -58,12 +45,13 @@ CubeSubstance::CubeSubstance(CubeID cube, App* app) {
     substances[7] = &koh005;
     substances[8] = &h2o;
 
-    static unsigned activeSubstance = 0;
+
+    static unsigned activeSubstance;
 }
 
-CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
-                                                liquidTicker(7.5),
-                                                mixedSubstance("", 0.0f, 0, 0){
+CubeBecher::CubeBecher(CubeID cube, App* app)
+    : dropTicker(9), liquidTicker(7.5), move(false),
+      textSpeed(0.2f), mixedSubstance("", 0.0f, 0, 0){
     mCube = cube;
     mApp = app;
     vid.attach(cube);
@@ -99,26 +87,15 @@ CubeBecher::CubeBecher(CubeID cube, App* app) : dropTicker(9),
     substances[7] = koh005Wrapper;
     substances[8] = h2oWrapper;
 
-    static bool move = false;
-    static const float textSpeed = 0.2f;
-
-    static Float2 text = {0, 0};
-    static Float2 textTarget = {0, 0};
-
-    static LiquidAnimation liquidAnim = {0, 0, false};
-    static DropAnimation dropAnim = {0, false};
-
     static SubstanceVolumeWrapper mixedWrapper = {&mixedSubstance, 0};
 
 }
 
-CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : ticker(1){
+CubePhIndicator::CubePhIndicator(CubeID cube, App* app) : calculateOn(false) {
     mCube = cube;
     mApp = app;
     vid.attach(cube);
     motion[cube].attach(cube);
-
-    static float ph = 0.0f;
     static bool calculateOn = false;
 }
 
@@ -139,7 +116,6 @@ void CubePipete::init(){
     //Posição inicial do liquido, para não aparecer na tela
     //Se a imagem mudar tem que mudar isso
     liquid.move(0,72);
-    liquidAnim.lastY = liquid.y();
 }
 
 void CubeSubstance::init(){
@@ -350,22 +326,18 @@ void CubePipete::onTouch(unsigned id) {
     }
 }
 
-void CubePhIndicator::calculate(float dt) {
-    for(int t = ticker.tick(dt); t ; t--) {
-        if(calculateOn) {
-            ph = Calculator::calculatePh(mApp->cubeBecher);
+void CubePhIndicator::calculate() {
+    if (calculateOn) {
+        float ph = Calculator::calculatePh(mApp->cubeBecher);
 
-            const auto &calculator = vid.sprites[0];
+        const auto &calculator = vid.sprites[0];
 
-            calculator.setImage(Pointer, round(ph));
-            calculator.move(0,72);
+        calculator.setImage(Pointer, round(ph));
+        calculator.move(0,72);
 
-            String<20> str;
-            str << "pH:" << FixedFP(ph, 2, 2) << "\n";
-            vid.bg1.text(vec(5,12), Font, str);
-
-
-        }
+        String<20> str;
+        str << "pH:" << FixedFP(ph, 2, 2) << "\n";
+        vid.bg1.text(vec(5,12), Font, str);
     }
 }
 
