@@ -184,12 +184,12 @@ public:
     char * c_str() {
         return buffer;
     }
-
+    
     /// Return a C-style constant character pointer
     const char * c_str() const {
         return buffer;
     }
-
+    
     /// Implicit conversion to a C-style character pointer
     operator char *() {
         return buffer;
@@ -249,8 +249,6 @@ public:
      * The number returned is equal to the difference (this[i] - other[i])
      * where i is the index of the first non-matching character.
      */
-
-     //Alteramos essa função para usar o Macro do proprio sifteo(MIN) pois senão essa função não funciona.
     template <class T> int compare(const T &other) const {
         return strncmp(*this, other, MIN(capacity(), other.capacity()));
     }
