@@ -1,21 +1,25 @@
 #include "app.h"
 #include "cube.h"
 
-App::App() {
-    CubePipete cPipete = CubePipete(0,this);
-    this->cubePipete = &cPipete;
-
-    CubeSubstance cSubstance = CubeSubstance(1,this);
-    this->cubeSubstance = &cSubstance;
-
-    CubeBecher cBecher = CubeBecher(2,this);
-    this->cubeBecher = &cBecher;
-
-    CubePhIndicator cPhIndicator = CubePhIndicator(3,this);
-    this->cubePhIndicator = &cPhIndicator;
+App::App() : cubePipete(0),
+             cubeSubstance(0),
+             cubeBecher(0),
+             cubePhIndicator(0){
 }
 
 void App::init() {
+    static CubePipete cPipete = CubePipete(0,this);
+    cubePipete = &cPipete;
+
+    static CubeSubstance cSubstance = CubeSubstance(1,this);
+    cubeSubstance = &cSubstance;
+
+    static CubeBecher cBecher = CubeBecher(2,this);
+    cubeBecher = &cBecher;
+
+    static CubePhIndicator cPhIndicator = CubePhIndicator(3,this);
+    cubePhIndicator = &cPhIndicator;
+
     cubePipete->init();
     cubeSubstance->init();
     cubeBecher->init();
@@ -27,10 +31,23 @@ void App::init() {
     Events::neighborRemove.set(&App::onNeighborRemove, this);
 }
 
+void App::animate(float dt){
+    this->cubeBecher->animate(dt);
+    this->cubePipete->animate(dt);
+}
+
+void App::calculate() {
+    this->cubePhIndicator->calculate();
+}
+
 void App::run() {
     TimeStep ts;
-    ts.next();
-    System::paint();
+    while(true) {
+        animate(ts.delta());
+        calculate();
+        System::paint();
+        ts.next();
+    }
 }
 
 void App::onTouch(unsigned id) {
@@ -42,10 +59,11 @@ void App::onTouch(unsigned id) {
 }
 
 void App::onAccelChange(unsigned id) {
-    //switch(id) {
-    //    default: ; break ;
-    //    case 0: cubePipete->onAccelChange(id); break ;
-    //};
+    switch(id) {
+        default: ; break ;
+        case 0: cubePipete->onAccelChange(id); break ;
+        case 2: cubeBecher->onAccelChange(id); break ;
+    };
 }
 
 void App::onNeighborAdd(unsigned firstID,
@@ -60,6 +78,12 @@ void App::onNeighborAdd(unsigned firstID,
                                       secondID,
                                       secondSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborAdd(firstID,
+                                           firstSide,
+                                           secondID,
+                                           secondSide);
+            break ;
     };
 
     switch(secondID) {
@@ -68,6 +92,12 @@ void App::onNeighborAdd(unsigned firstID,
                                       secondSide,
                                       firstID,
                                       firstSide);
+            break ;
+        case 3:
+            cubePhIndicator->onNeighborAdd(secondID,
+                                           secondSide,
+                                           firstID,
+                                           firstSide);
             break ;
     };
 }
@@ -84,6 +114,12 @@ void App::onNeighborRemove(unsigned firstID,
                                          secondID,
                                          secondSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborRemove(firstID,
+                                              firstSide,
+                                              secondID,
+                                              secondSide);
+            break ;
     };
 
     switch(secondID) {
@@ -93,8 +129,11 @@ void App::onNeighborRemove(unsigned firstID,
                                          firstID,
                                          firstSide);
             break ;
+        case 3:
+            cubePhIndicator->onNeighborRemove(secondID,
+                                              secondSide,
+                                              firstID,
+                                              firstSide);
+            break ;
     };
 }
-
-
-

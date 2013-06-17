@@ -6,7 +6,28 @@
 
 using namespace Sifteo;
 
+static const int SUBSTANCES_NUMBER = 9;
+
+static TiltShakeRecognizer motion[CUBE_ALLOCATION];
+
 class App;
+
+struct SubstanceVolumeWrapper {
+    Substance *substance;
+    float volume;
+};
+
+struct LiquidAnimation {
+    int lastY;
+    int frame;
+    bool animated;
+};
+
+struct DropAnimation {
+    int frame;
+    bool animated;
+};
+
 
 class CubePipete{
 public:
@@ -16,18 +37,32 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
 
-    const float GET_VOLUME = 0.0050f;
-    const float MAX_VOLUME = 0.0100f;
-    const float SET_VOLUME = 0.0005f;
-    float volume = 0.0f;
+    TimeTicker liquidTicker;
+
+    LiquidAnimation liquidAnim;
+
+    bool move;
+    bool getLiquid;
+
+    const float textSpeed;
+    const float GET_VOLUME;
+    const float MAX_VOLUME;
+    const float SET_VOLUME;
+
+    Float2 text;
+    Float2 textTarget;
+
+    float volume;
     Substance *currentSubstance;
     bool connectedToSubstance;
     bool connectedToBecher;
 
     void init();
+    void writeText(const char *str);
     bool isSameSubstance(Substance* substance);
+    void animate(float dt);
+    void animateText(float dt);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
@@ -50,21 +85,25 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
 
-    unsigned activeSubstance = 0;
-    Substance *substances[4];
+    unsigned activeSubstance;
 
-    Substance hcl = Acid("HCl", 1.0f, 1);
-    Substance hbr = Acid("HBr", 1.0f, 1);
-    Substance naoh = Base("NaOH", 1.0f, 1);
-    Substance koh = Base("KOH", 1.0f, 1);
+    Acid hcl;
+    Acid hcl01;
+    Acid hbr;
+    Acid hbr005;
+    Base naoh;
+    Base naoh01;
+    Base koh;
+    Base koh005;
+    Substance h2o;
+
+    Substance* substances[SUBSTANCES_NUMBER];
 
     void init();
     void rotate();
     Substance* getCurrentSubstance();
     void onTouch(unsigned id);
-    void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
                        unsigned firstSide,
                        unsigned secondID,
@@ -76,11 +115,6 @@ public:
 
 };
 
-struct SubstanceVolumeWrapper {
-    Substance *substance;
-    float volume;
-};
-
 class CubeBecher{
 public:
     CubeBecher(CubeID cube, App* app);
@@ -89,18 +123,29 @@ public:
     App* mApp;
 
     VideoBuffer vid;
-    TiltShakeRecognizer motion;
 
-    SubstanceVolumeWrapper substances[4];
+    TimeTicker dropTicker;
+    TimeTicker liquidTicker;
 
-    Substance hcl = Acid("HCl", 1.0f, 1);
-    Substance hbr = Acid("HBr", 1.0f, 1);
-    Substance naoh = Base("NaOH", 1.0f, 1);
-    Substance koh = Base("KOH", 1.0f, 1);
+    bool move;
+    float textSpeed;
+
+    Float2 text;
+    Float2 textTarget;
+
+    LiquidAnimation liquidAnim;
+    DropAnimation dropAnim;
+
+    Substance mixedSubstance;
+
+    //Pode ser que tenhamos que colocar como ponteiro para usar static.
+    SubstanceVolumeWrapper substances[SUBSTANCES_NUMBER];
+    SubstanceVolumeWrapper mixedWrapper;
 
     void init();
+    void animate(float dt);
+    void writeText(const char *str);
     void addSubstance(Substance* substance, float volume);
-    void printSubstance(unsigned index);
     void onTouch(unsigned id);
     void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
@@ -121,12 +166,13 @@ public:
     CubeID mCube;
     App* mApp;
 
-    TiltShakeRecognizer motion;
     VideoBuffer vid;
+    bool calculateOn;
+    TimeTicker ticker;
 
     void init();
+    void calculate();
     void onTouch(unsigned id);
-    void onAccelChange(unsigned id);
     void onNeighborAdd(unsigned firstID,
                        unsigned firstSide,
                        unsigned secondID,
